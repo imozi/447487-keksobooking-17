@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Олег Зайцев](https://up.htmlacademy.ru/javascript/17/user/447487).
-* Наставник: `Неизвестно`.
+* Наставник: [Максим Лыков](https://htmlacademy.ru/profile/id529621).
 
 ---
 
