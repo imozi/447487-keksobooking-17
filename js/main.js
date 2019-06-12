@@ -20,8 +20,8 @@ var dataAnnouncement = {
 var quantityAnnouncements = 8;
 
 var removeClass = function (element, nameClass) {
-  var domElement = document.querySelector(element).classList;
-  domElement.remove(nameClass);
+  var classListElement = document.querySelector(element).classList;
+  classListElement.remove(nameClass);
 };
 
 var getRandomNumber = function (min, max) {
@@ -37,8 +37,8 @@ var createAnnouncement = function (data, index) {
     author: {avatar: data.avatar + (index + 1) + '.png'},
     offer: {type: getRandomValue(data.housingTypes)},
     location: {
-      x: getRandomNumber(data.locations.minX, data.locations.maxX) + data.pinSize.width * 0.5,
-      y: getRandomNumber(data.locations.minY, data.locations.maxY) + data.pinSize.height
+      x: getRandomNumber(data.locations.minX, data.locations.maxX),
+      y: getRandomNumber(data.locations.minY, data.locations.maxY)
     }
   };
 };
@@ -53,7 +53,7 @@ var renderAnnouncements = function (quantity) {
     AnnouncementElement = PIN.cloneNode(true);
     AnnouncementElement.querySelector('img').src = Announcement.author.avatar;
     AnnouncementElement.querySelector('img').alt = Announcement.offer.type;
-    AnnouncementElement.style = 'left:' + Announcement.location.x + 'px; top:' + Announcement.location.y + 'px;';
+    AnnouncementElement.style = 'left:' + (Announcement.location.x - dataAnnouncement.pinSize.width * 0.5) + 'px; top:' + (Announcement.location.y - dataAnnouncement.pinSize.height) + 'px;';
     fragment.appendChild(AnnouncementElement);
   }
   MAP.appendChild(fragment);
