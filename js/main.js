@@ -102,9 +102,18 @@ var getCurrentAddress = function () {
   };
 };
 
+var CURRENT_ADDRESS = getCurrentAddress();
+
 var setInputAddressCoordinate = function () {
-  INPUT_ADDRESS.value = getCurrentAddress().x + ', ' + getCurrentAddress().y;
+  INPUT_ADDRESS.value = CURRENT_ADDRESS.x + ', ' + CURRENT_ADDRESS.y;
   return INPUT_ADDRESS.value;
+};
+
+var notActiveMode = function () {
+  addAttr(FORM_FIELDSETS, 'disabled');
+  addAttr(MAP_FILTER_SELECTS, 'disabled');
+  addAttr(MAP_FILTER_FIELDSET, 'disabled');
+  setInputAddressCoordinate(CURRENT_ADDRESS.x, CURRENT_ADDRESS.y);
 };
 
 var getActiveMode = function () {
@@ -121,10 +130,7 @@ var getActiveMode = function () {
   isActiveMode = true;
 };
 
-addAttr(FORM_FIELDSETS, 'disabled');
-addAttr(MAP_FILTER_SELECTS, 'disabled');
-addAttr(MAP_FILTER_FIELDSET, 'disabled');
-setInputAddressCoordinate(getCurrentAddress().x, getCurrentAddress().y);
+notActiveMode();
 
 PIN_MAIN.addEventListener('click', getActiveMode);
 PIN_MAIN.addEventListener('mouseup', setInputAddressCoordinate);
