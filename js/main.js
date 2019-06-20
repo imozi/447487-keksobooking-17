@@ -5,10 +5,14 @@ var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
 var PIN_MAIN = document.querySelector('.map__pin--main');
 var FORM = document.querySelector('.ad-form');
 var FORM_FIELDSETS = FORM.querySelectorAll('fieldset');
+var FORM_INPUT_ADDRESS = FORM.querySelector('#address');
+var FORM_SELECT_TYPE = FORM.querySelector('#type');
+var FORM_SELECT_TIMEIN = FORM.querySelector('#timein');
+var FORM_SELECT_TIMEOUT = FORM.querySelector('#timeout');
+var FORM_PRICE = FORM.querySelector('#price');
 var MAP_FILTER = document.querySelector('.map__filters');
 var MAP_FILTER_SELECTS = MAP_FILTER.querySelectorAll('select');
 var MAP_FILTER_FIELDSET = MAP_FILTER.querySelector('fieldset');
-var INPUT_ADDRESS = document.querySelector('input[name="address"]');
 var PIN_MAIN_WIDTH = 65;
 var PIN_MAIN_HEIGHT = 87;
 var isShowAnnouncements = false;
@@ -16,7 +20,7 @@ var isActiveMode = false;
 
 var dataAnnouncement = {
   avatar: 'img/avatars/user0',
-  housingTypes: ['place', 'flat', 'house', 'bungalo'],
+  housingTypes: ['palace', 'flat', 'house', 'bungalo'],
   locations: {
     minX: 0,
     maxX: 1200,
@@ -102,18 +106,17 @@ var getCurrentAddress = function () {
   };
 };
 
-var CURRENT_ADDRESS = getCurrentAddress();
-
 var setInputAddressCoordinate = function () {
-  INPUT_ADDRESS.value = CURRENT_ADDRESS.x + ', ' + CURRENT_ADDRESS.y;
-  return INPUT_ADDRESS.value;
+  var currentAddress = getCurrentAddress();
+  FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
+  return FORM_INPUT_ADDRESS.value;
 };
 
 var notActiveMode = function () {
   addAttr(FORM_FIELDSETS, 'disabled');
   addAttr(MAP_FILTER_SELECTS, 'disabled');
   addAttr(MAP_FILTER_FIELDSET, 'disabled');
-  setInputAddressCoordinate(CURRENT_ADDRESS.x, CURRENT_ADDRESS.y);
+  setInputAddressCoordinate();
 };
 
 var getActiveMode = function () {
@@ -134,3 +137,41 @@ notActiveMode();
 
 PIN_MAIN.addEventListener('click', getActiveMode);
 PIN_MAIN.addEventListener('mouseup', setInputAddressCoordinate);
+
+
+var onChangePriceOfNight = function (type) {
+  if (type === 'bungalo') {
+    FORM_PRICE.setAttribute('min', 0);
+    FORM_PRICE.placeholder = '0';
+  }
+
+  if (type === 'flat') {
+    FORM_PRICE.setAttribute('min', 1000);
+    FORM_PRICE.placeholder = '1000';
+  }
+
+  if (type === 'house') {
+    FORM_PRICE.setAttribute('min', 5000);
+    FORM_PRICE.placeholder = '5000';
+  }
+
+  if (type === 'palace') {
+    FORM_PRICE.setAttribute('min', 10000);
+    FORM_PRICE.placeholder = '10000';
+  }
+};
+
+var onChangeTimeIn = function () {
+  FORM_SELECT_TIMEOUT.value = FORM_SELECT_TIMEIN.value;
+};
+
+var onChangeTimeOut = function () {
+  FORM_SELECT_TIMEIN.value = FORM_SELECT_TIMEOUT.value;
+};
+
+FORM_SELECT_TYPE.addEventListener('change', function () {
+  onChangePriceOfNight(FORM_SELECT_TYPE.value);
+});
+
+FORM_SELECT_TIMEIN.addEventListener('change', onChangeTimeIn);
+FORM_SELECT_TIMEOUT.addEventListener('change', onChangeTimeOut);
