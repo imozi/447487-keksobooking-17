@@ -34,6 +34,13 @@ var dataAnnouncement = {
 };
 var quantityAnnouncements = 8;
 
+var priceTypes = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
 var removeClass = function (element, nameClass) {
   var classListElement = document.querySelector(element).classList;
   classListElement.remove(nameClass);
@@ -140,38 +147,22 @@ PIN_MAIN.addEventListener('mouseup', setInputAddressCoordinate);
 
 
 var onChangePriceOfNight = function (type) {
-  if (type === 'bungalo') {
-    FORM_PRICE.setAttribute('min', 0);
-    FORM_PRICE.placeholder = '0';
-  }
-
-  if (type === 'flat') {
-    FORM_PRICE.setAttribute('min', 1000);
-    FORM_PRICE.placeholder = '1000';
-  }
-
-  if (type === 'house') {
-    FORM_PRICE.setAttribute('min', 5000);
-    FORM_PRICE.placeholder = '5000';
-  }
-
-  if (type === 'palace') {
-    FORM_PRICE.setAttribute('min', 10000);
-    FORM_PRICE.placeholder = '10000';
-  }
+  FORM_PRICE.setAttribute('min', priceTypes[type]);
+  FORM_PRICE.placeholder = priceTypes[type];
 };
 
-var onChangeTimeIn = function () {
-  FORM_SELECT_TIMEOUT.value = FORM_SELECT_TIMEIN.value;
+var changeTime = function (time) {
+  FORM_SELECT_TIMEOUT.value = time;
+  FORM_SELECT_TIMEIN.value = time;
 };
 
-var onChangeTimeOut = function () {
-  FORM_SELECT_TIMEIN.value = FORM_SELECT_TIMEOUT.value;
+var onChangeSelectOption = function (evt) {
+  changeTime(evt.target.value);
 };
 
 FORM_SELECT_TYPE.addEventListener('change', function () {
   onChangePriceOfNight(FORM_SELECT_TYPE.value);
 });
 
-FORM_SELECT_TIMEIN.addEventListener('change', onChangeTimeIn);
-FORM_SELECT_TIMEOUT.addEventListener('change', onChangeTimeOut);
+FORM_SELECT_TIMEIN.addEventListener('change', onChangeSelectOption);
+FORM_SELECT_TIMEOUT.addEventListener('change', onChangeSelectOption);
