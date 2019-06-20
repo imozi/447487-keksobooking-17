@@ -5,10 +5,14 @@ var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
 var PIN_MAIN = document.querySelector('.map__pin--main');
 var FORM = document.querySelector('.ad-form');
 var FORM_FIELDSETS = FORM.querySelectorAll('fieldset');
+var FORM_INPUT_ADDRESS = FORM.querySelector('#address');
+var FORM_SELECT_TYPE = FORM.querySelector('#type');
+var FORM_SELECT_TIMEIN = FORM.querySelector('#timein');
+var FORM_SELECT_TIMEOUT = FORM.querySelector('#timeout');
+var FORM_PRICE = FORM.querySelector('#price');
 var MAP_FILTER = document.querySelector('.map__filters');
 var MAP_FILTER_SELECTS = MAP_FILTER.querySelectorAll('select');
 var MAP_FILTER_FIELDSET = MAP_FILTER.querySelector('fieldset');
-var INPUT_ADDRESS = document.querySelector('input[name="address"]');
 var PIN_MAIN_WIDTH = 65;
 var PIN_MAIN_HEIGHT = 87;
 var isShowAnnouncements = false;
@@ -16,7 +20,7 @@ var isActiveMode = false;
 
 var dataAnnouncement = {
   avatar: 'img/avatars/user0',
-  housingTypes: ['place', 'flat', 'house', 'bungalo'],
+  housingTypes: ['palace', 'flat', 'house', 'bungalo'],
   locations: {
     minX: 0,
     maxX: 1200,
@@ -29,6 +33,13 @@ var dataAnnouncement = {
   }
 };
 var quantityAnnouncements = 8;
+
+var priceTypes = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
 
 var removeClass = function (element, nameClass) {
   var classListElement = document.querySelector(element).classList;
@@ -103,8 +114,16 @@ var getCurrentAddress = function () {
 };
 
 var setInputAddressCoordinate = function () {
-  INPUT_ADDRESS.value = getCurrentAddress().x + ', ' + getCurrentAddress().y;
-  return INPUT_ADDRESS.value;
+  var currentAddress = getCurrentAddress();
+  FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
+  return FORM_INPUT_ADDRESS.value;
+};
+
+var notActiveMode = function () {
+  addAttr(FORM_FIELDSETS, 'disabled');
+  addAttr(MAP_FILTER_SELECTS, 'disabled');
+  addAttr(MAP_FILTER_FIELDSET, 'disabled');
+  setInputAddressCoordinate();
 };
 
 var getActiveMode = function () {
@@ -121,10 +140,29 @@ var getActiveMode = function () {
   isActiveMode = true;
 };
 
-addAttr(FORM_FIELDSETS, 'disabled');
-addAttr(MAP_FILTER_SELECTS, 'disabled');
-addAttr(MAP_FILTER_FIELDSET, 'disabled');
-setInputAddressCoordinate(getCurrentAddress().x, getCurrentAddress().y);
+notActiveMode();
 
 PIN_MAIN.addEventListener('click', getActiveMode);
 PIN_MAIN.addEventListener('mouseup', setInputAddressCoordinate);
+
+
+var onChangePriceOfNight = function (type) {
+  FORM_PRICE.setAttribute('min', priceTypes[type]);
+  FORM_PRICE.placeholder = priceTypes[type];
+};
+
+var changeTime = function (time) {
+  FORM_SELECT_TIMEOUT.value = time;
+  FORM_SELECT_TIMEIN.value = time;
+};
+
+var onChangeSelectOption = function (evt) {
+  changeTime(evt.target.value);
+};
+
+FORM_SELECT_TYPE.addEventListener('change', function () {
+  onChangePriceOfNight(FORM_SELECT_TYPE.value);
+});
+
+FORM_SELECT_TIMEIN.addEventListener('change', onChangeSelectOption);
+FORM_SELECT_TIMEOUT.addEventListener('change', onChangeSelectOption);
