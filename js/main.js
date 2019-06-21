@@ -75,7 +75,7 @@ var renderAnnouncements = function (quantity) {
     AnnouncementElement = PIN.cloneNode(true);
     AnnouncementElement.querySelector('img').src = Announcement.author.avatar;
     AnnouncementElement.querySelector('img').alt = Announcement.offer.type;
-    AnnouncementElement.style = 'left:' + (Announcement.location.x - dataAnnouncement.pinSize.width * 0.5) + 'px; top:' + (Announcement.location.y - dataAnnouncement.pinSize.height) + 'px;';
+    AnnouncementElement.style = 'left:' + (Announcement.location.x + dataAnnouncement.pinSize.width * 0.5) + 'px; top:' + (Announcement.location.y - dataAnnouncement.pinSize.height) + 'px;';
     fragment.appendChild(AnnouncementElement);
   }
   isShowAnnouncements = true;
@@ -142,9 +142,6 @@ var getActiveMode = function () {
 
 notActiveMode();
 
-PIN_MAIN.addEventListener('click', getActiveMode);
-PIN_MAIN.addEventListener('mouseup', setInputAddressCoordinate);
-
 
 var onChangePriceOfNight = function (type) {
   FORM_PRICE.setAttribute('min', priceTypes[type]);
@@ -166,3 +163,53 @@ FORM_SELECT_TYPE.addEventListener('change', function () {
 
 FORM_SELECT_TIMEIN.addEventListener('change', onChangeSelectOption);
 FORM_SELECT_TIMEOUT.addEventListener('change', onChangeSelectOption);
+
+// drag pin_main
+
+PIN_MAIN.addEventListener('mousedown', function (downEvt) {
+  var locationMove = {
+    minX: 0,
+    maxX: 1200,
+    minY: 130,
+    maxY: 630
+  };
+
+  var startCoordinate = {
+    x: downEvt.clientX,
+    y: downEvt.clientY,
+  };
+
+  var onMouseMove = function (moveEvt) {
+    var shift = {
+      x: startCoordinate.x - moveEvt.clientX,
+      y: startCoordinate.y - moveEvt.clientY
+    };
+
+    startCoordinate = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
+    var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
+
+    if (currentCoordinateX >= locationMove.minX && currentCoordinateX <= locationMove.maxX - PIN_MAIN_WIDTH) {
+      PIN_MAIN.style.left = currentCoordinateX + 'px';
+    }
+
+    if (currentCoordinateY >= locationMove.minY && currentCoordinateY <= locationMove.maxY) {
+      PIN_MAIN.style.top = currentCoordinateY + 'px';
+    }
+  };
+
+  var onMouseUp = function () {
+    MAP.removeEventListener('mousemove', onMouseMove);
+    MAP.removeEventListener('mouseup', onMouseUp);
+  };
+
+  MAP.addEventListener('mousemove', onMouseMove);
+  MAP.addEventListener('mousemove', getActiveMode);
+  MAP.addEventListener('mousemove', setInputAddressCoordinate);
+  MAP.addEventListener('mouseup', setInputAddressCoordinate);
+  MAP.addEventListener('mouseup', onMouseUp);
+});
