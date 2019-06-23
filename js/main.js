@@ -15,18 +15,18 @@ var MAP_FILTER_SELECTS = MAP_FILTER.querySelectorAll('select');
 var MAP_FILTER_FIELDSET = MAP_FILTER.querySelector('fieldset');
 var PIN_MAIN_WIDTH = 65;
 var PIN_MAIN_HEIGHT = 87;
+var LOCATIONS = {
+  minX: 0,
+  maxX: 1200,
+  minY: 130,
+  maxY: 630
+};
 var isShowAnnouncements = false;
 var isActiveMode = false;
 
 var dataAnnouncement = {
   avatar: 'img/avatars/user0',
   housingTypes: ['palace', 'flat', 'house', 'bungalo'],
-  locations: {
-    minX: 0,
-    maxX: 1200,
-    minY: 130,
-    maxY: 630
-  },
   pinSize: {
     width: 50,
     height: 70
@@ -59,8 +59,8 @@ var createAnnouncement = function (data, index) {
     author: {avatar: data.avatar + (index + 1) + '.png'},
     offer: {type: getRandomValue(data.housingTypes)},
     location: {
-      x: getRandomNumber(data.locations.minX, data.locations.maxX),
-      y: getRandomNumber(data.locations.minY, data.locations.maxY)
+      x: getRandomNumber(LOCATIONS.minX, LOCATIONS.maxX),
+      y: getRandomNumber(LOCATIONS.minY, LOCATIONS.maxY)
     }
   };
 };
@@ -75,7 +75,7 @@ var renderAnnouncements = function (quantity) {
     AnnouncementElement = PIN.cloneNode(true);
     AnnouncementElement.querySelector('img').src = Announcement.author.avatar;
     AnnouncementElement.querySelector('img').alt = Announcement.offer.type;
-    AnnouncementElement.style = 'left:' + (Announcement.location.x + dataAnnouncement.pinSize.width * 0.5) + 'px; top:' + (Announcement.location.y - dataAnnouncement.pinSize.height) + 'px;';
+    AnnouncementElement.style = 'left:' + (Announcement.location.x - dataAnnouncement.pinSize.width * 0.5) + 'px; top:' + (Announcement.location.y - dataAnnouncement.pinSize.height) + 'px;';
     fragment.appendChild(AnnouncementElement);
   }
   isShowAnnouncements = true;
@@ -142,7 +142,6 @@ var getActiveMode = function () {
 
 notActiveMode();
 
-
 var onChangePriceOfNight = function (type) {
   FORM_PRICE.setAttribute('min', priceTypes[type]);
   FORM_PRICE.placeholder = priceTypes[type];
@@ -165,14 +164,8 @@ FORM_SELECT_TIMEIN.addEventListener('change', onChangeSelectOption);
 FORM_SELECT_TIMEOUT.addEventListener('change', onChangeSelectOption);
 
 // drag pin_main
-
-PIN_MAIN.addEventListener('mousedown', function (downEvt) {
-  var locationMove = {
-    minX: 0,
-    maxX: 1200,
-    minY: 130,
-    maxY: 630
-  };
+var onMouseDown = function (downEvt) {
+  downEvt.preventDefault();
 
   var startCoordinate = {
     x: downEvt.clientX,
@@ -180,6 +173,8 @@ PIN_MAIN.addEventListener('mousedown', function (downEvt) {
   };
 
   var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
     var shift = {
       x: startCoordinate.x - moveEvt.clientX,
       y: startCoordinate.y - moveEvt.clientY
@@ -193,23 +188,26 @@ PIN_MAIN.addEventListener('mousedown', function (downEvt) {
     var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
     var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
 
-    if (currentCoordinateX >= locationMove.minX && currentCoordinateX <= locationMove.maxX - PIN_MAIN_WIDTH) {
+    if (currentCoordinateX >= LOCATIONS.minX && currentCoordinateX <= LOCATIONS.maxX - PIN_MAIN_WIDTH) {
       PIN_MAIN.style.left = currentCoordinateX + 'px';
     }
 
-    if (currentCoordinateY >= locationMove.minY && currentCoordinateY <= locationMove.maxY) {
+    if (currentCoordinateY >= LOCATIONS.minY && currentCoordinateY <= LOCATIONS.maxY) {
       PIN_MAIN.style.top = currentCoordinateY + 'px';
     }
+    setInputAddressCoordinate();
   };
 
-  var onMouseUp = function () {
-    MAP.removeEventListener('mousemove', onMouseMove);
-    MAP.removeEventListener('mouseup', onMouseUp);
+  var onMouseUp = function (mouseUp) {
+    mouseUp.preventDefault();
+
+    getActiveMode();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
   };
 
-  MAP.addEventListener('mousemove', onMouseMove);
-  MAP.addEventListener('mousemove', getActiveMode);
-  MAP.addEventListener('mousemove', setInputAddressCoordinate);
-  MAP.addEventListener('mouseup', setInputAddressCoordinate);
-  MAP.addEventListener('mouseup', onMouseUp);
-});
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
+
+PIN_MAIN.addEventListener('mousedown', onMouseDown);
