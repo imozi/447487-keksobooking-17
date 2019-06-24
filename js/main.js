@@ -201,7 +201,9 @@ var onMouseDown = function (downEvt) {
   var onMouseUp = function (mouseUp) {
     mouseUp.preventDefault();
 
-    getActiveMode();
+    if (!isActiveMode) {
+      getActiveMode();
+    }
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
