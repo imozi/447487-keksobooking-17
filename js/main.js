@@ -15,18 +15,18 @@ var MAP_FILTER_SELECTS = MAP_FILTER.querySelectorAll('select');
 var MAP_FILTER_FIELDSET = MAP_FILTER.querySelector('fieldset');
 var PIN_MAIN_WIDTH = 65;
 var PIN_MAIN_HEIGHT = 87;
+var LOCATIONS = {
+  minX: 0,
+  maxX: 1200,
+  minY: 130,
+  maxY: 630
+};
 var isShowAnnouncements = false;
 var isActiveMode = false;
 
 var dataAnnouncement = {
   avatar: 'img/avatars/user0',
   housingTypes: ['palace', 'flat', 'house', 'bungalo'],
-  locations: {
-    minX: 0,
-    maxX: 1200,
-    minY: 130,
-    maxY: 630
-  },
   pinSize: {
     width: 50,
     height: 70
@@ -59,8 +59,8 @@ var createAnnouncement = function (data, index) {
     author: {avatar: data.avatar + (index + 1) + '.png'},
     offer: {type: getRandomValue(data.housingTypes)},
     location: {
-      x: getRandomNumber(data.locations.minX, data.locations.maxX),
-      y: getRandomNumber(data.locations.minY, data.locations.maxY)
+      x: getRandomNumber(LOCATIONS.minX, LOCATIONS.maxX),
+      y: getRandomNumber(LOCATIONS.minY, LOCATIONS.maxY)
     }
   };
 };
@@ -142,10 +142,6 @@ var getActiveMode = function () {
 
 notActiveMode();
 
-PIN_MAIN.addEventListener('click', getActiveMode);
-PIN_MAIN.addEventListener('mouseup', setInputAddressCoordinate);
-
-
 var onChangePriceOfNight = function (type) {
   FORM_PRICE.setAttribute('min', priceTypes[type]);
   FORM_PRICE.placeholder = priceTypes[type];
@@ -166,3 +162,54 @@ FORM_SELECT_TYPE.addEventListener('change', function () {
 
 FORM_SELECT_TIMEIN.addEventListener('change', onChangeSelectOption);
 FORM_SELECT_TIMEOUT.addEventListener('change', onChangeSelectOption);
+
+// drag pin_main
+var onMouseDown = function (downEvt) {
+  downEvt.preventDefault();
+
+  var startCoordinate = {
+    x: downEvt.clientX,
+    y: downEvt.clientY,
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoordinate.x - moveEvt.clientX,
+      y: startCoordinate.y - moveEvt.clientY
+    };
+
+    startCoordinate = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
+    var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
+
+    if (currentCoordinateX >= LOCATIONS.minX && currentCoordinateX <= LOCATIONS.maxX - PIN_MAIN_WIDTH) {
+      PIN_MAIN.style.left = currentCoordinateX + 'px';
+    }
+
+    if (currentCoordinateY >= LOCATIONS.minY && currentCoordinateY <= LOCATIONS.maxY) {
+      PIN_MAIN.style.top = currentCoordinateY + 'px';
+    }
+    setInputAddressCoordinate();
+  };
+
+  var onMouseUp = function (mouseUp) {
+    mouseUp.preventDefault();
+
+    if (!isActiveMode) {
+      getActiveMode();
+    }
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
+
+PIN_MAIN.addEventListener('mousedown', onMouseDown);
