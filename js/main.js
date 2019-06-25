@@ -1,7 +1,7 @@
 'use strict';
 /**
-* Перемещение главной метки объявления перевод карты и формы в активный режим
-**/
+ * Перемещение главной метки объявления перевод карты и формы в активный режим
+*/
 (function () {
   var PIN_MAIN = document.querySelector('.map__pin--main');
   var PIN_MAIN_WIDTH = 65;
@@ -74,7 +74,7 @@
 
     var startCoordinate = {
       x: downEvt.clientX,
-      y: downEvt.clientY,
+      y: downEvt.clientY
     };
 
     /**

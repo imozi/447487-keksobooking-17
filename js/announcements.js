@@ -1,12 +1,12 @@
 'use strict';
 /**
  * Рендеринг похожих объявлений
-**/
+*/
 
 /**
  * @param {number} quantity
  * @return {function}
-**/
+*/
 window.renderAnnouncements = (function () {
   var MAP = document.querySelector('.map');
   var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -18,19 +18,26 @@ window.renderAnnouncements = (function () {
   * @return {object}
   */
   var createAnnouncement = function (data, index) {
+    var location = {
+      x: window.util.getRandomNumber(window.data.locations.minX, window.data.locations.maxX),
+      y: window.util.getRandomNumber(window.data.locations.minY, window.data.locations.maxY)
+    };
+
+    var address = {
+      x: location.x + window.data.dataAnnouncement.pinSize.width * 0.5,
+      y: location.y + window.data.dataAnnouncement.pinSize.height
+    };
+
     return {
       author: {avatar: data.avatar + (index + 1) + '.png'},
       offer: {type: window.util.getRandomValue(data.housingTypes)},
-      location: {
-        x: window.util.getRandomNumber(window.data.locations.minX, window.data.locations.maxX),
-        y: window.util.getRandomNumber(window.data.locations.minY, window.data.locations.maxY)
-      }
+      location: address
     };
   };
   /**
    * Рендеринг нужного количества похожих объявлений
    * @param {number} quantity
-   **/
+   */
   var renderAnnouncements = function (quantity) {
     var fragment = document.createDocumentFragment();
     var Announcement = null;
@@ -41,7 +48,8 @@ window.renderAnnouncements = (function () {
       AnnouncementElement = PIN.cloneNode(true);
       AnnouncementElement.querySelector('img').src = Announcement.author.avatar;
       AnnouncementElement.querySelector('img').alt = Announcement.offer.type;
-      AnnouncementElement.style = 'left:' + (Announcement.location.x + window.data.dataAnnouncement.pinSize.width * 0.5) + 'px; top:' + (Announcement.location.y - window.data.dataAnnouncement.pinSize.height) + 'px;';
+      AnnouncementElement.style.left = Announcement.location.x + 'px';
+      AnnouncementElement.style.top = Announcement.location.y + 'px';
       fragment.appendChild(AnnouncementElement);
     }
     MAP.appendChild(fragment);

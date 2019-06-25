@@ -1,11 +1,11 @@
 'use strict';
 /**
  * Тестовые данные волшебников
-**/
+*/
 
 /**
  * @return {object}
-**/
+*/
 window.data = (function () {
   return {
     dataAnnouncement: {

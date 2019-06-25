@@ -1,14 +1,14 @@
 'use strict';
 /**
- * Утелиты, хэлперы.
-**/
+ * Утилиты, хэлперы.
+*/
 window.util = (function () {
   return {
     /**
      * Удалить нужный класс
      * @param {HTMLElement} element
      * @param {string} nameClass
-    **/
+    */
     removeClass: function (element, nameClass) {
       var classListElement = document.querySelector(element).classList;
       classListElement.remove(nameClass);
@@ -18,7 +18,7 @@ window.util = (function () {
      * @param {number} min
      * @param {number} max
      * @return {number} возвращает рандомное число из диапозона
-    **/
+    */
     getRandomNumber: function (min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     },
@@ -26,7 +26,7 @@ window.util = (function () {
      * Получние рандомного значние из массива
      * @param {array} array
      * @return {string} возвращает рандомного значние из массива
-     **/
+     */
     getRandomValue: function (array) {
       return array[window.util.getRandomNumber(0, array.length)];
     },
@@ -34,7 +34,7 @@ window.util = (function () {
      * Добавление нужного атрибута
      * @param {HTMLElement} elements
      * @param {string} attr
-     **/
+     */
     addAttr: function (elements, attr) {
       if (elements.length >= 0) {
         for (var i = 0; i < elements.length; i++) {
@@ -48,7 +48,7 @@ window.util = (function () {
      * Удаление нужного атрибута
      * @param {HTMLElement} elements
      * @param {string} attr
-     **/
+     */
     clearAttr: function (elements, attr) {
       if (elements.length >= 0) {
         for (var i = 0; i < elements.length; i++) {
