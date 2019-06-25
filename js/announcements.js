@@ -31,7 +31,8 @@ window.renderAnnouncements = (function () {
     return {
       author: {avatar: data.avatar + (index + 1) + '.png'},
       offer: {type: window.util.getRandomValue(data.housingTypes)},
-      location: address
+      location: location,
+      address: address
     };
   };
   /**
@@ -48,8 +49,8 @@ window.renderAnnouncements = (function () {
       AnnouncementElement = PIN.cloneNode(true);
       AnnouncementElement.querySelector('img').src = Announcement.author.avatar;
       AnnouncementElement.querySelector('img').alt = Announcement.offer.type;
-      AnnouncementElement.style.left = Announcement.location.x + 'px';
-      AnnouncementElement.style.top = Announcement.location.y + 'px';
+      AnnouncementElement.style.left = Announcement.address.x + 'px';
+      AnnouncementElement.style.top = Announcement.address.y + 'px';
       fragment.appendChild(AnnouncementElement);
     }
     MAP.appendChild(fragment);
