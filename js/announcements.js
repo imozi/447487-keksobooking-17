@@ -49,8 +49,8 @@ window.renderAnnouncements = (function () {
       AnnouncementElement = PIN.cloneNode(true);
       AnnouncementElement.querySelector('img').src = Announcement.author.avatar;
       AnnouncementElement.querySelector('img').alt = Announcement.offer.type;
-      AnnouncementElement.style.left = Announcement.address.x + 'px';
-      AnnouncementElement.style.top = Announcement.address.y + 'px';
+      AnnouncementElement.style.left = Announcement.location.x + 'px';
+      AnnouncementElement.style.top = Announcement.location.y + 'px';
       fragment.appendChild(AnnouncementElement);
     }
     MAP.appendChild(fragment);
