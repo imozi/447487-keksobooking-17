@@ -13,8 +13,8 @@
    * @param {string} type
    */
   var onChangePriceOfNight = function (type) {
-    FORM_PRICE.setAttribute('min', window.data.priceTypes[type]);
-    FORM_PRICE.placeholder = window.data.priceTypes[type];
+    FORM_PRICE.setAttribute('min', window.constants.priceTypes[type]);
+    FORM_PRICE.placeholder = window.constants.priceTypes[type];
   };
   /**
    * Изменения значений в полях заезда/выезда
@@ -31,6 +31,8 @@
   var onChangeSelectOption = function (evt) {
     changeTime(evt.target.value);
   };
+
+  onChangePriceOfNight(FORM_SELECT_TYPE.value);
 
   FORM_SELECT_TYPE.addEventListener('change', function () {
     onChangePriceOfNight(FORM_SELECT_TYPE.value);

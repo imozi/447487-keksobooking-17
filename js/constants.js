@@ -6,7 +6,7 @@
 /**
  * @return {object}
  */
-window.variables = (function () {
+window.constants = (function () {
   return {
     pinSize: {
       width: 50,

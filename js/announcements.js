@@ -15,17 +15,17 @@ window.renderAnnouncements = (function () {
    */
   var renderAnnouncements = function (data) {
     var fragment = document.createDocumentFragment();
-    var Announcement = null;
-    var AnnouncementElement = null;
+    var announcement = null;
+    var announcementElement = null;
 
     for (var i = 0; i < data.length; i++) {
-      Announcement = data[i];
-      AnnouncementElement = PIN.cloneNode(true);
-      AnnouncementElement.querySelector('img').src = Announcement.author.avatar;
-      AnnouncementElement.querySelector('img').alt = Announcement.offer.type;
-      AnnouncementElement.style.left = Announcement.location.x + 'px';
-      AnnouncementElement.style.top = Announcement.location.y + 'px';
-      fragment.appendChild(AnnouncementElement);
+      announcement = data[i];
+      announcementElement = PIN.cloneNode(true);
+      announcementElement.querySelector('img').src = announcement.author.avatar;
+      announcementElement.querySelector('img').alt = announcement.offer.type;
+      announcementElement.style.left = announcement.location.x + 'px';
+      announcementElement.style.top = announcement.location.y + 'px';
+      fragment.appendChild(announcementElement);
     }
     MAP.appendChild(fragment);
   };

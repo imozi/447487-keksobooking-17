@@ -61,11 +61,10 @@
   };
   /**
    * Выводит ошибки если данные не загрузились
+   * @return {HTMLElement}
    */
   var errorUploadData = function () {
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(ERROR);
-    MAIN.appendChild(fragment);
+    return MAIN.appendChild(ERROR);
   };
 
   notActiveMode();
@@ -100,12 +99,13 @@
 
       var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
       var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
+      var locations = window.constants.locations;
 
-      if (currentCoordinateX >= window.variables.locations.minX && currentCoordinateX <= window.variables.locations.maxX - PIN_MAIN_WIDTH) {
+      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - PIN_MAIN_WIDTH) {
         PIN_MAIN.style.left = currentCoordinateX + 'px';
       }
 
-      if (currentCoordinateY >= window.variables.locations.minY && currentCoordinateY <= window.variables.locations.maxY) {
+      if (currentCoordinateY >= locations.minY && currentCoordinateY <= locations.maxY) {
         PIN_MAIN.style.top = currentCoordinateY + 'px';
       }
       setInputAddressCoordinate();
