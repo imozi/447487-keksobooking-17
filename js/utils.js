@@ -1,14 +1,14 @@
 'use strict';
 /**
  * Утилиты, хэлперы.
-*/
+ */
 window.util = (function () {
   return {
     /**
      * Удалить нужный класс
      * @param {HTMLElement} element
      * @param {string} nameClass
-    */
+     */
     removeClass: function (element, nameClass) {
       var classListElement = document.querySelector(element).classList;
       classListElement.remove(nameClass);
@@ -18,7 +18,7 @@ window.util = (function () {
      * @param {number} min
      * @param {number} max
      * @return {number} возвращает рандомное число из диапозона
-    */
+     */
     getRandomNumber: function (min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     },
