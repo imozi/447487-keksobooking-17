@@ -23,6 +23,10 @@ window.data = (function () {
         }
       });
 
+      xhr.addEventListener('error', function () {
+        onError();
+      });
+
       xhr.open('GET', urlServer);
       xhr.send();
     }
