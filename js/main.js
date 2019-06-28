@@ -56,7 +56,7 @@
     window.util.clearAttr(FORM_FIELDSETS, 'disabled');
     window.util.clearAttr(MAP_FILTER_SELECTS, 'disabled');
     window.util.clearAttr(MAP_FILTER_FIELDSET, 'disabled');
-    window.data.load('https://js.dump.academy/keksobooking/data', window.renderAnnouncements, errorUploadData);
+    window.data.load('https://js.dump.academy/keksobooking1/data', window.renderAnnouncements, errorUploadData);
     isActiveMode = true;
   };
   /**
@@ -64,7 +64,7 @@
    * @return {HTMLElement}
    */
   var errorUploadData = function () {
-    return MAIN.appendChild(ERROR);
+    return MAIN.appendChild(ERROR.cloneNode(true));
   };
 
   notActiveMode();
