@@ -1,57 +1,31 @@
 'use strict';
 /**
  * Рендеринг похожих объявлений
-*/
+ */
 
 /**
- * @param {number} quantity
  * @return {function}
-*/
+ */
 window.renderAnnouncements = (function () {
   var MAP = document.querySelector('.map');
   var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
-
-  /**
-  * Создает объект с данными объявления из полученных данных
-  * @param {array} data
-  * @param {number} index
-  * @return {object}
-  */
-  var createAnnouncement = function (data, index) {
-    var location = {
-      x: window.util.getRandomNumber(window.data.locations.minX, window.data.locations.maxX),
-      y: window.util.getRandomNumber(window.data.locations.minY, window.data.locations.maxY)
-    };
-
-    var address = {
-      x: location.x + window.data.dataAnnouncement.pinSize.width * 0.5,
-      y: location.y + window.data.dataAnnouncement.pinSize.height
-    };
-
-    return {
-      author: {avatar: data.avatar + (index + 1) + '.png'},
-      offer: {type: window.util.getRandomValue(data.housingTypes)},
-      location: location,
-      address: address
-    };
-  };
   /**
    * Рендеринг нужного количества похожих объявлений
-   * @param {number} quantity
+   * @param {number} data
    */
-  var renderAnnouncements = function (quantity) {
+  var renderAnnouncements = function (data) {
     var fragment = document.createDocumentFragment();
-    var Announcement = null;
-    var AnnouncementElement = null;
+    var announcement = null;
+    var announcementElement = null;
 
-    for (var i = 0; i < quantity; i++) {
-      Announcement = createAnnouncement(window.data.dataAnnouncement, i);
-      AnnouncementElement = PIN.cloneNode(true);
-      AnnouncementElement.querySelector('img').src = Announcement.author.avatar;
-      AnnouncementElement.querySelector('img').alt = Announcement.offer.type;
-      AnnouncementElement.style.left = Announcement.location.x + 'px';
-      AnnouncementElement.style.top = Announcement.location.y + 'px';
-      fragment.appendChild(AnnouncementElement);
+    for (var i = 0; i < data.length; i++) {
+      announcement = data[i];
+      announcementElement = PIN.cloneNode(true);
+      announcementElement.querySelector('img').src = announcement.author.avatar;
+      announcementElement.querySelector('img').alt = announcement.offer.type;
+      announcementElement.style.left = announcement.location.x + 'px';
+      announcementElement.style.top = announcement.location.y + 'px';
+      fragment.appendChild(announcementElement);
     }
     MAP.appendChild(fragment);
   };

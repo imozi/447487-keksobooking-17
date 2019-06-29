@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Перемещение главной метки объявления перевод карты и формы в активный режим
-*/
+ */
 (function () {
   var PIN_MAIN = document.querySelector('.map__pin--main');
   var PIN_MAIN_WIDTH = 65;
@@ -12,9 +12,9 @@
   var MAP_FILTER = document.querySelector('.map__filters');
   var MAP_FILTER_SELECTS = MAP_FILTER.querySelectorAll('select');
   var MAP_FILTER_FIELDSET = MAP_FILTER.querySelector('fieldset');
+  var MAIN = document.querySelector('main');
+  var ERROR = document.querySelector('#error').content.querySelector('.error');
   var isActiveMode = false;
-  var quantityAnnouncements = 8;
-
   /**
    * Получение текущей позиции метки
    * @return {object}
@@ -29,7 +29,6 @@
       y: Math.round(coordinatePinY + (isActiveMode ? PIN_MAIN_HEIGHT : coordinatePinCenter))
     };
   };
-
   /**
    * Присваевание текущего адресса метки в поле адресса
    * @return {string}
@@ -39,7 +38,6 @@
     FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
     return FORM_INPUT_ADDRESS.value;
   };
-
   /**
    * Перевод карты, формы в неактивный режим
    */
@@ -49,7 +47,6 @@
     window.util.addAttr(MAP_FILTER_FIELDSET, 'disabled');
     setInputAddressCoordinate();
   };
-
   /**
    * Перевод карты, формы в активный режим и рендеринг похожих объявлений
    */
@@ -59,8 +56,15 @@
     window.util.clearAttr(FORM_FIELDSETS, 'disabled');
     window.util.clearAttr(MAP_FILTER_SELECTS, 'disabled');
     window.util.clearAttr(MAP_FILTER_FIELDSET, 'disabled');
-    window.renderAnnouncements(quantityAnnouncements);
+    window.data.load('https://js.dump.academy/keksobooking1/data', window.renderAnnouncements, errorUploadData);
     isActiveMode = true;
+  };
+  /**
+   * Выводит ошибки если данные не загрузились
+   * @return {HTMLElement}
+   */
+  var errorUploadData = function () {
+    return MAIN.appendChild(ERROR.cloneNode(true));
   };
 
   notActiveMode();
@@ -76,7 +80,6 @@
       x: downEvt.clientX,
       y: downEvt.clientY
     };
-
     /**
      * Перемещение метки по карте
      * @param {event} moveEvt
@@ -96,17 +99,17 @@
 
       var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
       var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
+      var locations = window.constants.locations;
 
-      if (currentCoordinateX >= window.data.locations.minX && currentCoordinateX <= window.data.locations.maxX - PIN_MAIN_WIDTH) {
+      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - PIN_MAIN_WIDTH) {
         PIN_MAIN.style.left = currentCoordinateX + 'px';
       }
 
-      if (currentCoordinateY >= window.data.locations.minY && currentCoordinateY <= window.data.locations.maxY) {
+      if (currentCoordinateY >= locations.minY && currentCoordinateY <= locations.maxY) {
         PIN_MAIN.style.top = currentCoordinateY + 'px';
       }
       setInputAddressCoordinate();
     };
-
     /**
      * Прекращение перемещения и отписка от событий mousemove и mouseup
      * @param {event} mouseUp
