@@ -12,8 +12,7 @@
   var MAP_FILTER = document.querySelector('.map__filters');
   var MAP_FILTER_SELECTS = MAP_FILTER.querySelectorAll('select');
   var MAP_FILTER_FIELDSET = MAP_FILTER.querySelector('fieldset');
-  var MAIN = document.querySelector('main');
-  var ERROR = document.querySelector('#error').content.querySelector('.error');
+
   var isActiveMode = false;
   /**
    * Получение текущей позиции метки
@@ -56,15 +55,8 @@
     window.util.clearAttr(FORM_FIELDSETS, 'disabled');
     window.util.clearAttr(MAP_FILTER_SELECTS, 'disabled');
     window.util.clearAttr(MAP_FILTER_FIELDSET, 'disabled');
-    window.data.load('https://js.dump.academy/keksobooking1/data', window.renderAnnouncements, errorUploadData);
+    window.uploadDataServer.getData();
     isActiveMode = true;
-  };
-  /**
-   * Выводит ошибки если данные не загрузились
-   * @return {HTMLElement}
-   */
-  var errorUploadData = function () {
-    return MAIN.appendChild(ERROR.cloneNode(true));
   };
 
   notActiveMode();

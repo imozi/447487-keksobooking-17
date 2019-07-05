@@ -57,6 +57,13 @@ window.util = (function () {
       } else {
         elements.removeAttribute(attr);
       }
-    }
+    },
+    /**
+     * Удаление нужных элементов из DOM дерева
+     * @param {HTMLElement} element
+     */
+    clearDomElements: function (element) {
+      element.remove();
+    },
   };
 })();

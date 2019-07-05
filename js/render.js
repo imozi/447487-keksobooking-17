@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Рендеринг похожих объявлений
+ * Рендеринг похожих объявлений не больше 5 объявлений
  */
 
 /**
@@ -10,15 +10,29 @@ window.renderAnnouncements = (function () {
   var MAP = document.querySelector('.map');
   var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
   /**
-   * Рендеринг нужного количества похожих объявлений
-   * @param {number} data
+   * Удаляет объявления для рендеринга новых
    */
-  var renderAnnouncements = function (data) {
+  var clearAnnouncements = function () {
+    var MAP_PINS = MAP.querySelectorAll('.map__pin');
+
+    MAP_PINS.forEach(function (element) {
+      if (!element.classList.contains('map__pin--main')) {
+        window.util.clearDomElements(element);
+      }
+    });
+  };
+  /**
+   * @param {object} data
+   */
+  return function (data) {
     var fragment = document.createDocumentFragment();
     var announcement = null;
     var announcementElement = null;
+    var quantity = (data.length > 5) ? 5 : data.length;
 
-    for (var i = 0; i < data.length; i++) {
+    clearAnnouncements();
+
+    for (var i = 0; i < quantity; i++) {
       announcement = data[i];
       announcementElement = PIN.cloneNode(true);
       announcementElement.querySelector('img').src = announcement.author.avatar;
@@ -29,5 +43,4 @@ window.renderAnnouncements = (function () {
     }
     MAP.appendChild(fragment);
   };
-  return renderAnnouncements;
 })();
