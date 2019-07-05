@@ -10,10 +10,7 @@ window.sortData = (function () {
    */
   return function (value) {
     var sortedData = sortedData = window.dataAnnouncements.slice().filter(function (announcement) {
-      if (value === 'any') {
-        return announcement;
-      }
-      return announcement.offer.type === value;
+      return (value === 'any') ? announcement : announcement.offer.type === value;
     });
 
     return sortedData;
