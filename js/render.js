@@ -28,11 +28,10 @@ window.renderAnnouncements = (function () {
     var fragment = document.createDocumentFragment();
     var announcement = null;
     var announcementElement = null;
-    var quantity = (data.length > 5) ? 5 : data.length;
 
     clearAnnouncements();
 
-    for (var i = 0; i < quantity; i++) {
+    for (var i = 0; i < data.length; i++) {
       announcement = data[i];
       announcementElement = PIN.cloneNode(true);
       announcementElement.querySelector('img').src = announcement.author.avatar;

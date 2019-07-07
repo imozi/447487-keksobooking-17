@@ -8,7 +8,7 @@
    * Получает отсортированные данные по значению фильтра и рендерит их
    * @param {HTMLElement} element
    */
-  var onChangeValue = function (element) {
+  var onChangeTypeFilter = function (element) {
 
     element.addEventListener('change', function () {
       var data = window.sortData(element.value);
@@ -16,5 +16,5 @@
     });
   };
 
-  onChangeValue(HOUSING_TYPE);
+  onChangeTypeFilter(HOUSING_TYPE);
 })();
