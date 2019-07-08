@@ -2,17 +2,25 @@
 /**
  * Модуль сортировки данных
  */
+
+/**
+ * @return {function}
+ */
 window.sortData = (function () {
   /**
-   * Сортировка данных по значению и вывод только 5 данных
-   * @param {string} value
+   * Проверка фильтра с типом жилья по значению (для сортировки данных)
+   * @param {object} announcement
    * @return {object}
    */
-  return function (value) {
-    var sortedData = window.dataAnnouncements.filter(function (announcement) {
-      return (value === 'any') ? announcement : announcement.offer.type === value;
-    }).slice(0, 6);
-
-    return sortedData;
+  var checkType = function (announcement) {
+    var housingTypeValue = document.querySelector('#housing-type').value;
+    return (housingTypeValue === 'any') ? announcement : announcement.offer.type === housingTypeValue;
+  };
+  /**
+   * Сортировка данных по значению фильтра и вывод только 5 данных
+   * @return {object}
+   */
+  return function () {
+    return window.dataAnnouncements.filter(checkType).slice(0, 5);
   };
 })();

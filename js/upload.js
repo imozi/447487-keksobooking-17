@@ -7,12 +7,12 @@ window.uploadDataServer = (function () {
   var MAIN = document.querySelector('main');
   var ERROR = document.querySelector('#error').content.querySelector('.error');
   /**
-   * Записывает данные с сервера в глобальную область видимости при успешной загрузки и вызвает один раз рендеринг всех объявлений
+   * Записывает данные с сервера в глобальную область видимости при успешной загрузки и вызвает один раз рендерит объявления
    * @param {array} data
    */
   var successUpLoadData = function (data) {
     window.dataAnnouncements = data;
-    window.renderAnnouncements(data);
+    window.renderAnnouncements(window.sortData());
   };
   /**
    * Выводит ошибки если данные не загрузились
