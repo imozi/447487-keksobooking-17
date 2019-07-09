@@ -2,10 +2,6 @@
 /**
  * Модуль рендеринга объявлений
  */
-
-/**
- * @return {function}
- */
 window.renderAnnouncements = (function () {
   var MAP = document.querySelector('.map');
   var PIN = document.querySelector('#pin').content.querySelector('.map__pin');

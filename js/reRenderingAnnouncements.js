@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Обновление рендеринга объявлений при изменении значений фильтра
+ * Перерендеринг объявлений при изменении значений фильтра
  */
 (function () {
   var HOUSING_TYPE = document.querySelector('#housing-type');

@@ -2,10 +2,6 @@
 /**
  * Необходимые переменные
  */
-
-/**
- * @return {object}
- */
 window.constants = (function () {
   return {
     pinSize: {
