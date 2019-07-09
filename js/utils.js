@@ -31,20 +31,6 @@ window.util = (function () {
       return array[window.util.getRandomNumber(0, array.length)];
     },
     /**
-     * Добавление нужного атрибута
-     * @param {HTMLElement} elements
-     * @param {string} attr
-     */
-    addAttr: function (elements, attr) {
-      if (elements.length >= 0) {
-        for (var i = 0; i < elements.length; i++) {
-          elements[i].setAttribute(attr, '');
-        }
-      } else {
-        elements.setAttribute(attr, '');
-      }
-    },
-    /**
      * Удаление нужного атрибута
      * @param {HTMLElement} elements
      * @param {string} attr

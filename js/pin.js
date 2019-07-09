@@ -7,6 +7,12 @@
   var PIN_MAIN_WIDTH = 65;
   var PIN_MAIN_HEIGHT = 87;
   var isActiveMode = false;
+  var locations = {
+    minX: 0,
+    maxX: 1200,
+    minY: 130,
+    maxY: 630
+  };
   /**
    * Получение текущей позиции метки
    * @param {boolean} mode
@@ -62,7 +68,6 @@
 
       var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
       var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
-      var locations = window.constants.locations;
 
       if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - PIN_MAIN_WIDTH) {
         PIN_MAIN.style.left = currentCoordinateX + 'px';

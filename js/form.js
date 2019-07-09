@@ -13,6 +13,12 @@
   var MAP_FILTER_SELECTS = Array.from(document.querySelectorAll('select'));
   var MAP_FILTER_FIELDSET = document.querySelector('fieldset');
   var formElements = [].concat(FORM_FIELDSETS, MAP_FILTER_SELECTS, MAP_FILTER_FIELDSET);
+  var priceTypes = {
+    bungalo: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 10000
+  };
   /**
    * Переводит поля формы в указанное состояние (активное или неактивное)
    * @param {boolean} disabled
@@ -37,8 +43,8 @@
    * @param {string} type
    */
   var onChangePriceOfNight = function (type) {
-    FORM_PRICE.setAttribute('min', window.constants.priceTypes[type]);
-    FORM_PRICE.placeholder = window.constants.priceTypes[type];
+    FORM_PRICE.setAttribute('min', priceTypes[type]);
+    FORM_PRICE.placeholder = priceTypes[type];
   };
   /**
    * Изменения значений в полях заезда/выезда

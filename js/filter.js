@@ -1,12 +1,12 @@
 'use strict';
 /**
- * Перерендеринг объявлений при изменении значений фильтра
+ * Слушает изменения значений фильтра и показвает объявления по этим значениям
  */
 (function () {
   var HOUSING_TYPE = document.querySelector('#housing-type');
 
   var updateRenderAnnouncements = window.debounce(function () {
-    window.renderAnnouncements(window.sortData());
+    window.renderingAnnouncement(window.sortData());
   });
 
   HOUSING_TYPE.addEventListener('change', updateRenderAnnouncements);

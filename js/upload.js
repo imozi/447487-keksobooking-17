@@ -12,7 +12,7 @@ window.uploadDataServer = (function () {
    */
   var successUpLoadData = function (data) {
     window.dataAnnouncements = data;
-    window.renderAnnouncements(window.sortData());
+    window.renderingAnnouncement(window.sortData());
   };
   /**
    * Выводит ошибки если данные не загрузились
