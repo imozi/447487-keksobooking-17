@@ -1,22 +1,31 @@
 'use strict';
 /**
- * Рендеринг похожих объявлений
- */
-
-/**
- * @return {function}
+ * Модуль рендеринга объявлений
  */
 window.renderAnnouncements = (function () {
   var MAP = document.querySelector('.map');
   var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
   /**
-   * Рендеринг нужного количества похожих объявлений
-   * @param {number} data
+   * Удаляет объявления для рендеринга новых
    */
-  var renderAnnouncements = function (data) {
+  var clearAnnouncements = function () {
+    var MAP_PINS = MAP.querySelectorAll('.map__pin');
+
+    MAP_PINS.forEach(function (element) {
+      if (!element.classList.contains('map__pin--main')) {
+        window.util.clearDomElements(element);
+      }
+    });
+  };
+  /**
+   * @param {object} data
+   */
+  return function (data) {
     var fragment = document.createDocumentFragment();
     var announcement = null;
     var announcementElement = null;
+
+    clearAnnouncements();
 
     for (var i = 0; i < data.length; i++) {
       announcement = data[i];
@@ -29,5 +38,4 @@ window.renderAnnouncements = (function () {
     }
     MAP.appendChild(fragment);
   };
-  return renderAnnouncements;
 })();

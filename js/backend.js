@@ -2,7 +2,7 @@
 /**
  * Модуль загрузки дынных с сервера и отправки данных на сервер
  */
-window.data = (function () {
+window.backend = (function () {
   return {
     /**
      * Загрузка данных с сервера
@@ -14,7 +14,6 @@ window.data = (function () {
       var urlServer = url;
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
-
       xhr.addEventListener('load', function () {
         if (xhr.status === 200) {
           onLoad(xhr.response);

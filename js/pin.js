@@ -1,74 +1,37 @@
 'use strict';
 /**
- * Перемещение главной метки объявления перевод карты и формы в активный режим
+ * Перемещение главной метки, перевод карты и формы в активный режим
  */
 (function () {
   var PIN_MAIN = document.querySelector('.map__pin--main');
   var PIN_MAIN_WIDTH = 65;
   var PIN_MAIN_HEIGHT = 87;
-  var FORM = document.querySelector('.ad-form');
-  var FORM_INPUT_ADDRESS = FORM.querySelector('#address');
-  var FORM_FIELDSETS = FORM.querySelectorAll('fieldset');
-  var MAP_FILTER = document.querySelector('.map__filters');
-  var MAP_FILTER_SELECTS = MAP_FILTER.querySelectorAll('select');
-  var MAP_FILTER_FIELDSET = MAP_FILTER.querySelector('fieldset');
-  var MAIN = document.querySelector('main');
-  var ERROR = document.querySelector('#error').content.querySelector('.error');
   var isActiveMode = false;
   /**
    * Получение текущей позиции метки
+   * @param {boolean} mode
    * @return {object}
    */
-  var getCurrentAddress = function () {
+  var getCurrentAddress = function (mode) {
     var coordinatePinX = PIN_MAIN.offsetLeft;
     var coordinatePinY = PIN_MAIN.offsetTop;
     var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
 
     return {
       x: Math.round(coordinatePinX + coordinatePinCenter),
-      y: Math.round(coordinatePinY + (isActiveMode ? PIN_MAIN_HEIGHT : coordinatePinCenter))
+      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
     };
   };
   /**
-   * Присваевание текущего адресса метки в поле адресса
-   * @return {string}
+   * Перевод карты, формы в активный режим и получение данных с сервера
    */
-  var setInputAddressCoordinate = function () {
-    var currentAddress = getCurrentAddress();
-    FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
-    return FORM_INPUT_ADDRESS.value;
-  };
-  /**
-   * Перевод карты, формы в неактивный режим
-   */
-  var notActiveMode = function () {
-    window.util.addAttr(FORM_FIELDSETS, 'disabled');
-    window.util.addAttr(MAP_FILTER_SELECTS, 'disabled');
-    window.util.addAttr(MAP_FILTER_FIELDSET, 'disabled');
-    setInputAddressCoordinate();
-  };
-  /**
-   * Перевод карты, формы в активный режим и рендеринг похожих объявлений
-   */
-  var getActiveMode = function () {
+  var activeMode = function () {
     window.util.removeClass('.map', 'map--faded');
     window.util.removeClass('.ad-form', 'ad-form--disabled');
-    window.util.clearAttr(FORM_FIELDSETS, 'disabled');
-    window.util.clearAttr(MAP_FILTER_SELECTS, 'disabled');
-    window.util.clearAttr(MAP_FILTER_FIELDSET, 'disabled');
-    window.data.load('https://js.dump.academy/keksobooking1/data', window.renderAnnouncements, errorUploadData);
+    window.form.toggleStateFroms(false);
+    window.uploadDataServer.getData();
     isActiveMode = true;
   };
-  /**
-   * Выводит ошибки если данные не загрузились
-   * @return {HTMLElement}
-   */
-  var errorUploadData = function () {
-    return MAIN.appendChild(ERROR.cloneNode(true));
-  };
-
-  notActiveMode();
-
   /**
    * Получение координат метки
    * @param {event} downEvt
@@ -108,7 +71,7 @@
       if (currentCoordinateY >= locations.minY && currentCoordinateY <= locations.maxY) {
         PIN_MAIN.style.top = currentCoordinateY + 'px';
       }
-      setInputAddressCoordinate();
+      window.form.setInputAddressCoordinate(true);
     };
     /**
      * Прекращение перемещения и отписка от событий mousemove и mouseup
@@ -118,8 +81,9 @@
       mouseUp.preventDefault();
 
       if (!isActiveMode) {
-        getActiveMode();
+        activeMode();
       }
+
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
@@ -129,4 +93,8 @@
   };
 
   PIN_MAIN.addEventListener('mousedown', onMouseDown);
+
+  window.mainPin = {
+    getCurrentAddress: getCurrentAddress
+  };
 })();
