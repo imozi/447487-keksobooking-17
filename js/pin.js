@@ -24,11 +24,11 @@
     this.setData = data;
   };
 
-  Pin.prototype.card = function (item) {
-    return window.card.createCard(item);
+  Pin.prototype.card = function (info) {
+    return window.card.createCard(info);
   };
   /**
-   * Создает ментку на основе конструктора
+   * Создает пин на основе конструктора
    * @param {object} announcement
    * @return {HTMLElement}
    */
@@ -39,8 +39,7 @@
     pinNode.style.top = pin.positionY;
     pinNode.querySelector('img').src = pin.img;
     pinNode.querySelector('img').alt = pin.alt;
-    pinNode.querySelector('img').fullData = pin.setData;
-    pinNode.querySelector('img').card = pin.card;
+    pinNode.querySelector('img').card = pin.card(pin.setData);
     return pinNode;
   };
   /**
@@ -53,7 +52,7 @@
     pins.forEach(function (item) {
       item.addEventListener('click', function (evt) {
         item.classList.add('map__pin--active');
-        window.card.showCard(evt.target.fullData);
+        window.card.showCard(evt.target.card);
       });
     });
   };

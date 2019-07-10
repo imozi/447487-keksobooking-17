@@ -46,7 +46,7 @@
     var fragment = document.createDocumentFragment();
 
     pins.forEach(function (item) {
-      fragment.appendChild(item.card(item.fullData));
+      fragment.appendChild(item.card);
     });
 
     return fragment;
