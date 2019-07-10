@@ -1,105 +1,66 @@
 'use strict';
 /**
- * Перемещение главной метки, перевод карты и формы в активный режим
+ * Модуль создания метки объявления
+ * Зависимости модуль card.js
+ * Методы createPin, onClickPin в window.pin доступны для других модулей
  */
 (function () {
-  var PIN_MAIN = document.querySelector('.map__pin--main');
-  var PIN_MAIN_WIDTH = 65;
-  var PIN_MAIN_HEIGHT = 87;
-  var isActiveMode = false;
-  var locations = {
-    minX: 0,
-    maxX: 1200,
-    minY: 130,
-    maxY: 630
+  var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
+  var pinSize = {
+    width: 50,
+    height: 70
   };
   /**
-   * Получение текущей позиции метки
-   * @param {boolean} mode
-   * @return {object}
+   * Функция-коснтруктор для создания пинов
+   * @param {object} data
+   * @constructor
    */
-  var getCurrentAddress = function (mode) {
-    var coordinatePinX = PIN_MAIN.offsetLeft;
-    var coordinatePinY = PIN_MAIN.offsetTop;
-    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
+  var Pin = function (data) {
+    this.pin = PIN.cloneNode(true);
+    this.positionX = data.location.x - pinSize.height * 0.5 + 'px';
+    this.positionY = data.location.y - pinSize.width + 'px';
+    this.img = data.author.avatar;
+    this.alt = data.offer.description;
+    this.setData = data;
+  };
 
-    return {
-      x: Math.round(coordinatePinX + coordinatePinCenter),
-      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
-    };
+  Pin.prototype.card = function (item) {
+    return window.card.createCard(item);
   };
   /**
-   * Перевод карты, формы в активный режим и получение данных с сервера
+   * Создает ментку на основе конструктора
+   * @param {object} announcement
+   * @return {HTMLElement}
    */
-  var activeMode = function () {
-    window.util.removeClass('.map', 'map--faded');
-    window.util.removeClass('.ad-form', 'ad-form--disabled');
-    window.form.toggleStateFroms(false);
-    window.uploadDataServer.getData();
-    isActiveMode = true;
+  var createPin = function (announcement) {
+    var pin = new Pin(announcement);
+    var pinNode = pin.pin;
+    pinNode.style.left = pin.positionX;
+    pinNode.style.top = pin.positionY;
+    pinNode.querySelector('img').src = pin.img;
+    pinNode.querySelector('img').alt = pin.alt;
+    pinNode.querySelector('img').fullData = pin.setData;
+    pinNode.querySelector('img').card = pin.card;
+    return pinNode;
   };
   /**
-   * Получение координат метки
-   * @param {event} downEvt
+   * Подписывается на события клик по пину
+   * Показывает соответствующию данным карточку
    */
-  var onMouseDown = function (downEvt) {
-    downEvt.preventDefault();
+  var onClickPin = function () {
+    var pins = document.querySelectorAll('button[type = button]');
 
-    var startCoordinate = {
-      x: downEvt.clientX,
-      y: downEvt.clientY
-    };
-    /**
-     * Перемещение метки по карте
-     * @param {event} moveEvt
-     */
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shift = {
-        x: startCoordinate.x - moveEvt.clientX,
-        y: startCoordinate.y - moveEvt.clientY
-      };
-
-      startCoordinate = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
-      var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
-
-      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - PIN_MAIN_WIDTH) {
-        PIN_MAIN.style.left = currentCoordinateX + 'px';
-      }
-
-      if (currentCoordinateY >= locations.minY && currentCoordinateY <= locations.maxY) {
-        PIN_MAIN.style.top = currentCoordinateY + 'px';
-      }
-      window.form.setInputAddressCoordinate(true);
-    };
-    /**
-     * Прекращение перемещения и отписка от событий mousemove и mouseup
-     * @param {event} mouseUp
-     */
-    var onMouseUp = function (mouseUp) {
-      mouseUp.preventDefault();
-
-      if (!isActiveMode) {
-        activeMode();
-      }
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    pins.forEach(function (item) {
+      item.addEventListener('click', function (evt) {
+        item.classList.add('map__pin--active');
+        window.card.showCard(evt.target.fullData);
+      });
+    });
   };
 
-  PIN_MAIN.addEventListener('mousedown', onMouseDown);
-
-  window.mainPin = {
-    getCurrentAddress: getCurrentAddress
+  window.pin = {
+    createPin: createPin,
+    onClickPin: onClickPin
   };
+
 })();

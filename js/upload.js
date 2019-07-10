@@ -1,6 +1,8 @@
 'use strict';
 /**
  * Модуль получния данных с сервера
+ * Зависимости rendering.js
+ * Методы getData, successUpLoadData, errorUploadData доступны для других модулей
  */
 window.uploadDataServer = (function () {
   var SERVER_URL = 'https://js.dump.academy/keksobooking/data';
@@ -12,7 +14,7 @@ window.uploadDataServer = (function () {
    */
   var successUpLoadData = function (data) {
     window.dataAnnouncements = data;
-    window.renderingAnnouncement(window.sortData());
+    window.rendering(window.sortData());
   };
   /**
    * Выводит ошибки если данные не загрузились

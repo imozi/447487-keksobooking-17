@@ -1,6 +1,8 @@
 'use strict';
 /**
  * Состояние полей формы, валидация формы, присовение адреса метки
+ * Зависимости mainPin.js
+ * Методы toggleStateFroms, setInputAddressCoordinate в window.form доступны для дргуих модулей
  */
 (function () {
   var FORM = document.querySelector('.ad-form');

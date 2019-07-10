@@ -48,7 +48,7 @@ window.util = (function () {
      * Удаление нужных элементов из DOM дерева
      * @param {HTMLElement} element
      */
-    clearDomElements: function (element) {
+    clearDomElement: function (element) {
       element.remove();
     },
   };
