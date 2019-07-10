@@ -2,8 +2,8 @@
 /**
  * Утилиты, хэлперы.
  */
-window.util = (function () {
-  return {
+(function () {
+  window.util = {
     /**
      * Удалить нужный класс
      * @param {HTMLElement} element
@@ -31,20 +31,6 @@ window.util = (function () {
       return array[window.util.getRandomNumber(0, array.length)];
     },
     /**
-     * Удаление нужного атрибута
-     * @param {HTMLElement} elements
-     * @param {string} attr
-     */
-    clearAttr: function (elements, attr) {
-      if (elements.length >= 0) {
-        for (var i = 0; i < elements.length; i++) {
-          elements[i].removeAttribute(attr);
-        }
-      } else {
-        elements.removeAttribute(attr);
-      }
-    },
-    /**
      * Удаление нужных элементов из DOM дерева
      * @param {HTMLElement} element
      */
@@ -52,4 +38,5 @@ window.util = (function () {
       element.remove();
     },
   };
+
 })();

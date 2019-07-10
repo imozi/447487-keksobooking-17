@@ -16,21 +16,6 @@
     maxY: 630
   };
   /**
-   * Получение текущей позиции метки
-   * @param {boolean} mode
-   * @return {object}
-   */
-  var getCurrentAddress = function (mode) {
-    var coordinatePinX = PIN_MAIN.offsetLeft;
-    var coordinatePinY = PIN_MAIN.offsetTop;
-    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
-
-    return {
-      x: Math.round(coordinatePinX + coordinatePinCenter),
-      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
-    };
-  };
-  /**
    * Перевод карты, формы в активный режим и получение данных с сервера
    */
   var activeMode = function () {
@@ -101,7 +86,20 @@
 
   PIN_MAIN.addEventListener('mousedown', onMouseDown);
 
-  window.mainPin = {
-    getCurrentAddress: getCurrentAddress
+  /**
+   * Получение текущей позиции метки
+   * @param {boolean} mode
+   * @return {object}
+   */
+  window.getCurrentAddressPin = function (mode) {
+    var coordinatePinX = PIN_MAIN.offsetLeft;
+    var coordinatePinY = PIN_MAIN.offsetTop;
+    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
+
+    return {
+      x: Math.round(coordinatePinX + coordinatePinCenter),
+      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
+    };
   };
+
 })();

@@ -55,7 +55,7 @@
    * Рендерин пины и карточки из полученных данных и подписывается на события click
    * @param {object} data
    */
-  var rendering = function (data) {
+  window.rendering = function (data) {
     var pins = getPins(data);
     CONTAINER_PINS.appendChild(pins);
 
@@ -64,7 +64,5 @@
 
     window.pin.onClickPin();
   };
-
-  window.rendering = rendering;
 
 })();

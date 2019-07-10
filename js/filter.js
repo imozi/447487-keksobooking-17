@@ -11,4 +11,5 @@
   });
 
   HOUSING_TYPE.addEventListener('change', updateRenderAnnouncements);
+
 })();

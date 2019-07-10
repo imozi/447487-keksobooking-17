@@ -18,10 +18,8 @@
    * Сортировка данных по значению фильтра и вывод только 5 данных
    * @return {object}
    */
-  var sortData = function () {
+  window.sortData = function () {
     return window.dataAnnouncements.filter(checkType).slice(0, 5);
   };
-
-  window.sortData = sortData;
 
 })();

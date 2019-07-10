@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Состояние полей формы, валидация формы, присовение адреса метки
- * Зависимости mainPin.js
+ * Зависимости drag.js
  * Методы toggleStateFroms, setInputAddressCoordinate в window.form доступны для дргуих модулей
  */
 (function () {
@@ -21,25 +21,7 @@
     house: 5000,
     palace: 10000
   };
-  /**
-   * Переводит поля формы в указанное состояние (активное или неактивное)
-   * @param {boolean} disabled
-   */
-  var toggleStateFroms = function (disabled) {
-    formElements.forEach(function (element) {
-      element.disabled = disabled ? true : false;
-    });
-  };
-  toggleStateFroms(true);
-  /**
-   * Присваевание текущего адресса метки в поле адресса
-   * @param {boolean} mode
-   */
-  var setInputAddressCoordinate = function (mode) {
-    var currentAddress = window.mainPin.getCurrentAddress(mode);
-    FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
-  };
-  setInputAddressCoordinate();
+
   /**
    * Добавление нимимального значение и изменения placeholder
    * @param {string} type
@@ -74,8 +56,27 @@
   FORM_SELECT_TIMEOUT.addEventListener('change', onChangeSelectOption);
 
   window.form = {
-    toggleStateFroms: toggleStateFroms,
-    setInputAddressCoordinate: setInputAddressCoordinate
+    /**
+     * Переводит поля формы в указанное состояние (активное или неактивное)
+     * @param {boolean} disabled
+     */
+    toggleStateFroms: function (disabled) {
+      formElements.forEach(function (element) {
+        element.disabled = disabled ? true : false;
+      });
+    },
+    /**
+     * Присваевание текущего адресса метки в поле адресса
+     * @param {boolean} mode
+     */
+    setInputAddressCoordinate: function (mode) {
+      var currentAddress = window.getCurrentAddressPin(mode);
+      FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
+    }
   };
+
+  window.form.toggleStateFroms(true);
+  window.form.setInputAddressCoordinate();
+
 })();
 

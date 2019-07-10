@@ -27,39 +27,37 @@
   Pin.prototype.card = function (info) {
     return window.card.createCard(info);
   };
-  /**
-   * Создает пин на основе конструктора
-   * @param {object} announcement
-   * @return {HTMLElement}
-   */
-  var createPin = function (announcement) {
-    var pin = new Pin(announcement);
-    var pinNode = pin.pin;
-    pinNode.style.left = pin.positionX;
-    pinNode.style.top = pin.positionY;
-    pinNode.querySelector('img').src = pin.img;
-    pinNode.querySelector('img').alt = pin.alt;
-    pinNode.querySelector('img').card = pin.card(pin.setData);
-    return pinNode;
-  };
-  /**
-   * Подписывается на события клик по пину
-   * Показывает соответствующию данным карточку
-   */
-  var onClickPin = function () {
-    var pins = document.querySelectorAll('button[type = button]');
-
-    pins.forEach(function (item) {
-      item.addEventListener('click', function (evt) {
-        item.classList.add('map__pin--active');
-        window.card.showCard(evt.target.card);
-      });
-    });
-  };
 
   window.pin = {
-    createPin: createPin,
-    onClickPin: onClickPin
+    /**
+     * Создает пин на основе конструктора
+     * @param {object} announcement
+     * @return {HTMLElement}
+     */
+    createPin: function (announcement) {
+      var pin = new Pin(announcement);
+      var pinNode = pin.pin;
+      pinNode.style.left = pin.positionX;
+      pinNode.style.top = pin.positionY;
+      pinNode.querySelector('img').src = pin.img;
+      pinNode.querySelector('img').alt = pin.alt;
+      pinNode.querySelector('img').card = pin.card(pin.setData);
+      return pinNode;
+    },
+    /**
+     * Подписывается на события клик по пину
+     * Показывает соответствующию данным карточку
+     */
+    onClickPin: function () {
+      var pins = document.querySelectorAll('button[type = button]');
+
+      pins.forEach(function (item) {
+        item.addEventListener('click', function (evt) {
+          item.classList.add('map__pin--active');
+          window.card.showCard(evt.target.card);
+        });
+      });
+    }
   };
 
 })();
