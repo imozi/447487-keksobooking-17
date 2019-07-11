@@ -2,10 +2,11 @@
 /**
  * Модуль создания метки объявления
  * Зависимости модуль card.js
- * Методы createPin, onClickPin в window.pin доступны для других модулей
+ * Методы createPin в window.pin доступны для других модулей
  */
 (function () {
   var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
+  var MAP_PINS = document.querySelector('.map__pins');
   var pinSize = {
     width: 50,
     height: 70
@@ -25,7 +26,7 @@
   };
 
   Pin.prototype.card = function (info) {
-    return window.card.createCard(info);
+    return window.card.create(info);
   };
 
   window.pin = {
@@ -34,7 +35,7 @@
      * @param {object} announcement
      * @return {HTMLElement}
      */
-    createPin: function (announcement) {
+    create: function (announcement) {
       var pin = new Pin(announcement);
       var pinNode = pin.pin;
       pinNode.style.left = pin.positionX;
@@ -45,17 +46,15 @@
       return pinNode;
     },
     /**
-     * Подписывается на события клик по пину
-     * Показывает соответствующию данным карточку
+     * Подписывается на события click по блоку map__pin
+     * Если клик был на пине то показывает соответствующию карточку
      */
-    onClickPin: function () {
-      var pins = document.querySelectorAll('button[type = button]');
-
-      pins.forEach(function (item) {
-        item.addEventListener('click', function (evt) {
-          item.classList.add('map__pin--active');
-          window.card.showCard(evt.target.card);
-        });
+    onClickMap: function () {
+      MAP_PINS.addEventListener('click', function (evt) {
+        if (evt.target.parentElement.classList.contains('map__pin') && !evt.target.parentElement.classList.contains('map__pin--main')) {
+          evt.target.parentElement.classList.add('map__pin--active');
+          window.card.open(evt.target.card);
+        }
       });
     }
   };

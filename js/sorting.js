@@ -2,7 +2,7 @@
 /**
  * Модуль сортировки данных
  * Зависимости upload.js
- * Метод sortData доступен для других модулей
+ * Метод sortingData доступен для других модулей
  */
 (function () {
   /**
@@ -18,7 +18,7 @@
    * Сортировка данных по значению фильтра и вывод только 5 данных
    * @return {object}
    */
-  window.sortData = function () {
+  window.sortingData = function () {
     return window.dataAnnouncements.filter(checkType).slice(0, 5);
   };
 

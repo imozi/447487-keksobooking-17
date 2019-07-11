@@ -12,7 +12,6 @@
     palace: 'Дворец'
   };
   var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-
   var featuresMap = {
     wifi: 'popup__feature--wifi',
     dishwasher: 'popup__feature--dishwasher',
@@ -63,7 +62,7 @@
      * @param {object} data
      * @return {HTMLElement}
      */
-    createCard: function (data) {
+    create: function (data) {
       var cardNode = CARD.cloneNode(true);
       cardNode.classList.add('hidden');
       cardNode.querySelector('.popup__avatar').src = data.author.avatar;
@@ -83,7 +82,7 @@
      * Показывает нужную карточку объявления
      * @param {HTMLElement} card
      */
-    showCard: function (card) {
+    open: function (card) {
       var cards = document.querySelectorAll('.map__card');
 
       cards.forEach(function (element) {

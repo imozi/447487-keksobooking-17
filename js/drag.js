@@ -21,8 +21,8 @@
   var activeMode = function () {
     window.util.removeClass('.map', 'map--faded');
     window.util.removeClass('.ad-form', 'ad-form--disabled');
-    window.form.toggleStateFroms(false);
-    window.uploadDataServer.getData();
+    window.form.toggleState(false);
+    window.uploadDataServer.load();
     isActiveMode = true;
   };
   /**

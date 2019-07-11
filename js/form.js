@@ -21,7 +21,25 @@
     house: 5000,
     palace: 10000
   };
-
+  window.form = {
+    /**
+     * Переводит поля формы в указанное состояние (активное или неактивное)
+     * @param {boolean} disabled
+     */
+    toggleState: function (disabled) {
+      formElements.forEach(function (element) {
+        element.disabled = disabled ? true : false;
+      });
+    },
+    /**
+     * Присваевание текущего адресса метки в поле адресса
+     * @param {boolean} mode
+     */
+    setInputAddressCoordinate: function (mode) {
+      var currentAddress = window.getCurrentAddressPin(mode);
+      FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
+    }
+  };
   /**
    * Добавление нимимального значение и изменения placeholder
    * @param {string} type
@@ -55,27 +73,7 @@
   FORM_SELECT_TIMEIN.addEventListener('change', onChangeSelectOption);
   FORM_SELECT_TIMEOUT.addEventListener('change', onChangeSelectOption);
 
-  window.form = {
-    /**
-     * Переводит поля формы в указанное состояние (активное или неактивное)
-     * @param {boolean} disabled
-     */
-    toggleStateFroms: function (disabled) {
-      formElements.forEach(function (element) {
-        element.disabled = disabled ? true : false;
-      });
-    },
-    /**
-     * Присваевание текущего адресса метки в поле адресса
-     * @param {boolean} mode
-     */
-    setInputAddressCoordinate: function (mode) {
-      var currentAddress = window.getCurrentAddressPin(mode);
-      FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
-    }
-  };
-
-  window.form.toggleStateFroms(true);
+  window.form.toggleState(true);
   window.form.setInputAddressCoordinate();
 
 })();

@@ -4,12 +4,12 @@
  * Зависимости rendering.js, sorting.js
  */
 (function () {
-  var HOUSING_TYPE = document.querySelector('#housing-type');
+  var MAP_FILTER = document.querySelector('.map__filters');
 
   var updateRenderAnnouncements = window.debounce(function () {
-    window.rendering(window.sortData());
+    window.rendering(window.sortingData());
   });
 
-  HOUSING_TYPE.addEventListener('change', updateRenderAnnouncements);
+  MAP_FILTER.addEventListener('change', updateRenderAnnouncements);
 
 })();
