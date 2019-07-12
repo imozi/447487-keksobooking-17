@@ -33,7 +33,9 @@
       clearMap();
 
       data.forEach(function (item) {
-        fragment.appendChild(window.pin.create(item));
+        if (item.offer) {
+          fragment.appendChild(window.pin.create(item));
+        }
       });
 
       CONTAINER_PINS.appendChild(fragment);
