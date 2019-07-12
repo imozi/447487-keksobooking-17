@@ -8,55 +8,43 @@
   var MAP = document.querySelector('.map');
   var CONTAINER_PINS = MAP.querySelector('.map__pins');
   /**
-   * Удаляет все пины и карточки объявлений для рендеринга новых
+   * Удаляет все пины и открытую карточку объявления для рендеринга новых
    */
   var clearMaps = function () {
-    var pins = Array.from(CONTAINER_PINS.querySelectorAll('button[type = button]'));
-    var cards = Array.from(MAP.querySelectorAll('.map__card'));
-    var mapItems = [].concat(pins, cards);
+    var pins = Array.from(CONTAINER_PINS.querySelectorAll('.map__pin:not(.map__pin--main)'));
 
-    mapItems.forEach(function (element) {
+    pins.forEach(function (element) {
       window.util.clearDomElement(element);
     });
+    window.card.close();
   };
-  /**
-   * Получает пины объявлений
-   * @param {object} data
-   * @return {HTMLAllCollection}
-   */
-  var getPins = function (data) {
-    var fragment = document.createDocumentFragment();
 
-    clearMaps();
+  window.rendering = {
+    /**
+     * Рендерит пины объявлений
+     * @param {object} data
+     */
+    pin: function (data) {
+      var fragment = document.createDocumentFragment();
 
-    data.forEach(function (item) {
-      fragment.appendChild(window.pin.create(item));
-    });
+      clearMaps();
 
-    return fragment;
-  };
-  /**
-   * Получет карточки объявлений
-   * @return {HTMLAllCollection}
-   */
-  var getCards = function () {
-    var pins = CONTAINER_PINS.querySelectorAll('button[type = button]');
-    var fragment = document.createDocumentFragment();
+      data.forEach(function (item) {
+        fragment.appendChild(window.pin.create(item));
+      });
 
-    pins.forEach(function (item) {
-      fragment.appendChild(item.firstChild.card);
-    });
-
-    return fragment;
-  };
-  /**
-   * Рендерит пины и карточки и вешает обработчик события click на родительский блок пинов
-   * @param {object} data
-   */
-  window.rendering = function (data) {
-    CONTAINER_PINS.appendChild(getPins(data));
-    MAP.appendChild(getCards());
-    window.pin.onClickMap();
+      CONTAINER_PINS.appendChild(fragment);
+      window.pin.onClickMap();
+    },
+    /**
+    * Рендерит карточки объявления
+    * @param {object} info
+    */
+    card: function (info) {
+      var fragment = document.createDocumentFragment();
+      fragment.appendChild(window.card.create(info));
+      MAP.appendChild(fragment);
+    }
   };
 
 })();

@@ -22,7 +22,7 @@
      */
     success: function (data) {
       window.dataAnnouncements = data;
-      window.rendering(window.sortingData());
+      window.rendering.pin(window.sortingData());
     },
     /**
      * Выводит ошибки если данные не загрузились

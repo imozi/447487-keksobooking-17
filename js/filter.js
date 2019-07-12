@@ -7,7 +7,7 @@
   var MAP_FILTER = document.querySelector('.map__filters');
 
   var updateRenderAnnouncements = window.debounce(function () {
-    window.rendering(window.sortingData());
+    window.rendering.pin(window.sortingData());
   });
 
   MAP_FILTER.addEventListener('change', updateRenderAnnouncements);

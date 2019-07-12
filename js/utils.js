@@ -37,6 +37,7 @@
     clearDomElement: function (element) {
       element.remove();
     },
+    isShowCard: false
   };
 
 })();

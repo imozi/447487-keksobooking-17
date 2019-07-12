@@ -26,7 +26,7 @@
   };
 
   Pin.prototype.card = function (info) {
-    return window.card.create(info);
+    window.card.open(info);
   };
 
   window.pin = {
@@ -42,18 +42,25 @@
       pinNode.style.top = pin.positionY;
       pinNode.querySelector('img').src = pin.img;
       pinNode.querySelector('img').alt = pin.alt;
-      pinNode.querySelector('img').card = pin.card(pin.setData);
+      pinNode.fullData = pin.setData;
+      pinNode.card = pin.card;
       return pinNode;
     },
     /**
-     * Подписывается на события click по блоку map__pin
-     * Если клик был на пине то показывает соответствующию карточку
+     * Подписывается на событие click по блоку map__pin
+     * Если клик был на пине то рендерит соответствующию карточку
      */
     onClickMap: function () {
       MAP_PINS.addEventListener('click', function (evt) {
-        if (evt.target.parentElement.classList.contains('map__pin') && !evt.target.parentElement.classList.contains('map__pin--main')) {
-          evt.target.parentElement.classList.add('map__pin--active');
-          window.card.open(evt.target.card);
+        if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
+          window.card.close();
+          if (evt.target.tagName === 'IMG') {
+            evt.target.parentElement.classList.add('map__pin--active');
+            evt.target.parentElement.card(evt.target.parentElement.fullData);
+          } else {
+            evt.target.classList.add('map__pin--active');
+            evt.target.card(evt.target.fullData);
+          }
         }
       });
     }

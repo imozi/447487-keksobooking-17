@@ -12,14 +12,6 @@
     palace: 'Дворец'
   };
   var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-  var featuresMap = {
-    wifi: 'popup__feature--wifi',
-    dishwasher: 'popup__feature--dishwasher',
-    parking: 'popup__feature--parking',
-    washer: 'popup__feature--washer',
-    elevator: 'popup__feature--elevator',
-    conditioner: 'popup__feature--conditioner'
-  };
   /**
    * Скрывает преимущества которых нет у объявления
    * @param {HTMLElement} node
@@ -28,7 +20,7 @@
   var checkFeatures = function (node, array) {
     features.forEach(function (element) {
       if (!array.includes(element)) {
-        node.querySelector('.' + featuresMap[element]).style.display = 'none';
+        node.querySelector('.popup__feature--' + element).style.display = 'none';
       }
     });
   };
@@ -46,7 +38,7 @@
       element.src = photo[0];
 
       photo.forEach(function (item, index) {
-        if (index > 1) {
+        if (index >= 1) {
           var elementClone = element.cloneNode();
           elementClone.src = item;
           fragment.appendChild(elementClone);
@@ -64,7 +56,6 @@
      */
     create: function (data) {
       var cardNode = CARD.cloneNode(true);
-      cardNode.classList.add('hidden');
       cardNode.querySelector('.popup__avatar').src = data.author.avatar;
       cardNode.querySelector('.popup__title').textContent = data.offer.title;
       cardNode.querySelector('.popup__title').textContent = data.offer.title;
@@ -79,18 +70,24 @@
       return cardNode;
     },
     /**
-     * Показывает нужную карточку объявления
-     * @param {HTMLElement} card
+     * Показывает карточку объявления
+     * @param {object} info
      */
-    open: function (card) {
-      var cards = document.querySelectorAll('.map__card');
-
-      cards.forEach(function (element) {
-        if (element === card) {
-          element.classList.remove('hidden');
-        }
-      });
+    open: function (info) {
+      window.rendering.card(info);
+    },
+    /**
+     * Закрывает открутую карточку объявления
+     */
+    close: function () {
+      var currentCard = document.querySelector('.map__card');
+      var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+      if (currentCard) {
+        window.util.clearDomElement(currentCard);
+        pins.forEach(function (item) {
+          item.classList.remove('map__pin--active');
+        });
+      }
     }
   };
-
 })();
