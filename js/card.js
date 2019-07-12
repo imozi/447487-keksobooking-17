@@ -52,22 +52,22 @@
   window.card = {
     /**
      * Создает карточку объявления на основе полученных данных от пина
-     * @param {object} data
+     * @param {object} offer
      * @return {HTMLElement}
      */
-    create: function (data) {
+    create: function (offer) {
       var cardNode = CARD.cloneNode(true);
-      cardNode.querySelector('.popup__avatar').src = data.author.avatar;
-      cardNode.querySelector('.popup__title').textContent = data.offer.title;
-      cardNode.querySelector('.popup__title').textContent = data.offer.title;
-      cardNode.querySelector('.popup__text--address').textContent = data.offer.address;
-      cardNode.querySelector('.popup__text--price').textContent = data.offer.price + ' ₽/ночь';
-      cardNode.querySelector('.popup__type').textContent = typesMap[data.offer.type];
-      cardNode.querySelector('.popup__text--capacity').textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей';
-      cardNode.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ' выезд до ' + data.offer.checkin;
-      cardNode.querySelector('.popup__description').textContent = data.offer.description;
-      checkFeatures(cardNode.querySelector('.popup__features'), data.offer.features);
-      setImages(cardNode.querySelector('.popup__photos'), cardNode.querySelector('.popup__photo'), data.offer.photos);
+      cardNode.querySelector('.popup__avatar').src = offer.avatar;
+      cardNode.querySelector('.popup__title').textContent = offer.title;
+      cardNode.querySelector('.popup__title').textContent = offer.title;
+      cardNode.querySelector('.popup__text--address').textContent = offer.address;
+      cardNode.querySelector('.popup__text--price').textContent = offer.price + ' ₽/ночь';
+      cardNode.querySelector('.popup__type').textContent = typesMap[offer.type];
+      cardNode.querySelector('.popup__text--capacity').textContent = offer.rooms + ' комнаты для ' + offer.guests + ' гостей';
+      cardNode.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin + ' выезд до ' + offer.checkin;
+      cardNode.querySelector('.popup__description').textContent = offer.description;
+      checkFeatures(cardNode.querySelector('.popup__features'), offer.features);
+      setImages(cardNode.querySelector('.popup__photos'), cardNode.querySelector('.popup__photo'), offer.photos);
       return cardNode;
     },
     /**

@@ -22,11 +22,12 @@
     this.positionY = data.location.y - pinSize.width + 'px';
     this.img = data.author.avatar;
     this.alt = data.offer.description;
-    this.setData = data;
+    this.offer = data.offer;
+    this.offer.avatar = data.author.avatar;
   };
 
-  Pin.prototype.card = function (info) {
-    window.card.show(info);
+  Pin.prototype.card = function (offer) {
+    window.card.show(offer);
   };
 
   window.pin = {
@@ -42,7 +43,7 @@
       pinNode.style.top = pin.positionY;
       pinNode.querySelector('img').src = pin.img;
       pinNode.querySelector('img').alt = pin.alt;
-      pinNode.fullData = pin.setData;
+      pinNode.offer = pin.offer;
       pinNode.card = pin.card;
       return pinNode;
     },
@@ -57,10 +58,10 @@
           window.card.removeForRendering();
           if (evt.target.tagName === 'IMG') {
             evt.target.parentElement.classList.add('map__pin--active');
-            evt.target.parentElement.card(evt.target.parentElement.fullData);
+            evt.target.parentElement.card(evt.target.parentElement.offer);
           } else {
             evt.target.classList.add('map__pin--active');
-            evt.target.card(evt.target.fullData);
+            evt.target.card(evt.target.offer);
           }
         }
       });
