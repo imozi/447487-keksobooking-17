@@ -1,7 +1,8 @@
 'use strict';
 /**
  * Модуль создания карточки объявления
- * Методы showCard, createCard в window.card доступны для других модулей
+ * Зависимости utils.js
+ * Методы create, rendering, removeForRendering в window.card доступны для других модулей
  */
 (function () {
   var CARD = document.querySelector('#card').content.querySelector('.map__card');
@@ -70,16 +71,16 @@
       return cardNode;
     },
     /**
-     * Показывает карточку объявления
+     * Рендерит карточку объявления
      * @param {object} info
      */
-    open: function (info) {
+    show: function (info) {
       window.rendering.card(info);
     },
     /**
-     * Закрывает открутую карточку объявления
+     * Удаляет открутую карточку объявления (необходимо для рендеринга новой)
      */
-    close: function () {
+    removeForRendering: function () {
       var currentCard = document.querySelector('.map__card');
       var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
       if (currentCard) {
@@ -90,4 +91,5 @@
       }
     }
   };
+
 })();

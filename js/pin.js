@@ -2,7 +2,7 @@
 /**
  * Модуль создания метки объявления
  * Зависимости модуль card.js
- * Методы createPin в window.pin доступны для других модулей
+ * Методы create, onClickMap в window.pin доступны для других модулей
  */
 (function () {
   var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -26,7 +26,7 @@
   };
 
   Pin.prototype.card = function (info) {
-    window.card.open(info);
+    window.card.show(info);
   };
 
   window.pin = {
@@ -48,12 +48,13 @@
     },
     /**
      * Подписывается на событие click по блоку map__pin
-     * Если клик был на пине то рендерит соответствующию карточку
+     * Если клик был на пине или на картинке пина то сначала закрывает (если была уже открыта другая карточка) карточку
+     * а потом рендерит соответствующию карточку текущего пина на которым произошло событие
      */
     onClickMap: function () {
       MAP_PINS.addEventListener('click', function (evt) {
         if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
-          window.card.close();
+          window.card.removeForRendering();
           if (evt.target.tagName === 'IMG') {
             evt.target.parentElement.classList.add('map__pin--active');
             evt.target.parentElement.card(evt.target.parentElement.fullData);
