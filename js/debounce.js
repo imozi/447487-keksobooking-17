@@ -1,9 +1,11 @@
 'use strict';
 /**
- * Модуль добавления таймаюта к выполняемой функции
+ * Модуль добавления таймаюта к выполняемой функции.
+ * Доступен для других модулей.
  */
 (function () {
   var DEBOUNCE_INTERVAL = 500;
+
   window.debounce = function (cb) {
     var timeout = null;
 
@@ -17,4 +19,5 @@
       }, DEBOUNCE_INTERVAL);
     };
   };
+
 })();

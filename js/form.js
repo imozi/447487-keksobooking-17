@@ -1,6 +1,8 @@
 'use strict';
 /**
  * Состояние полей формы, валидация формы, присовение адреса метки
+ * Зависимости drag.js
+ * Методы toggleStateFroms, setInputAddressCoordinate в window.form доступны для дргуих модулей
  */
 (function () {
   var FORM = document.querySelector('.ad-form');
@@ -13,32 +15,38 @@
   var MAP_FILTER_SELECTS = Array.from(document.querySelectorAll('select'));
   var MAP_FILTER_FIELDSET = document.querySelector('fieldset');
   var formElements = [].concat(FORM_FIELDSETS, MAP_FILTER_SELECTS, MAP_FILTER_FIELDSET);
-  /**
-   * Переводит поля формы в указанное состояние (активное или неактивное)
-   * @param {boolean} disabled
-   */
-  var toggleStateFroms = function (disabled) {
-    formElements.forEach(function (element) {
-      element.disabled = disabled ? true : false;
-    });
+  var priceTypes = {
+    bungalo: 0,
+    flat: 1000,
+    house: 5000,
+    palace: 10000
   };
-  toggleStateFroms(true);
-  /**
-   * Присваевание текущего адресса метки в поле адресса
-   * @param {boolean} mode
-   */
-  var setInputAddressCoordinate = function (mode) {
-    var currentAddress = window.mainPin.getCurrentAddress(mode);
-    FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
+  window.form = {
+    /**
+     * Переводит поля формы в указанное состояние (активное или неактивное)
+     * @param {boolean} disabled
+     */
+    toggleState: function (disabled) {
+      formElements.forEach(function (element) {
+        element.disabled = disabled ? true : false;
+      });
+    },
+    /**
+     * Присваевание текущего адресса метки в поле адресса
+     * @param {boolean} mode
+     */
+    setInputAddressCoordinate: function (mode) {
+      var currentAddress = window.getCurrentAddressPin(mode);
+      FORM_INPUT_ADDRESS.value = currentAddress.x + ', ' + currentAddress.y;
+    }
   };
-  setInputAddressCoordinate();
   /**
    * Добавление нимимального значение и изменения placeholder
    * @param {string} type
    */
   var onChangePriceOfNight = function (type) {
-    FORM_PRICE.setAttribute('min', window.constants.priceTypes[type]);
-    FORM_PRICE.placeholder = window.constants.priceTypes[type];
+    FORM_PRICE.setAttribute('min', priceTypes[type]);
+    FORM_PRICE.placeholder = priceTypes[type];
   };
   /**
    * Изменения значений в полях заезда/выезда
@@ -65,9 +73,8 @@
   FORM_SELECT_TIMEIN.addEventListener('change', onChangeSelectOption);
   FORM_SELECT_TIMEOUT.addEventListener('change', onChangeSelectOption);
 
-  window.form = {
-    toggleStateFroms: toggleStateFroms,
-    setInputAddressCoordinate: setInputAddressCoordinate
-  };
+  window.form.toggleState(true);
+  window.form.setInputAddressCoordinate();
+
 })();
 

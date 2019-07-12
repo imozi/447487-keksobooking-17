@@ -1,100 +1,71 @@
 'use strict';
 /**
- * Перемещение главной метки, перевод карты и формы в активный режим
+ * Модуль создания метки объявления
+ * Зависимости модуль card.js
+ * Методы create, onClickMap в window.pin доступны для других модулей
  */
 (function () {
-  var PIN_MAIN = document.querySelector('.map__pin--main');
-  var PIN_MAIN_WIDTH = 65;
-  var PIN_MAIN_HEIGHT = 87;
-  var isActiveMode = false;
-  /**
-   * Получение текущей позиции метки
-   * @param {boolean} mode
-   * @return {object}
-   */
-  var getCurrentAddress = function (mode) {
-    var coordinatePinX = PIN_MAIN.offsetLeft;
-    var coordinatePinY = PIN_MAIN.offsetTop;
-    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
-
-    return {
-      x: Math.round(coordinatePinX + coordinatePinCenter),
-      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
-    };
+  var PIN = document.querySelector('#pin').content.querySelector('.map__pin');
+  var MAP_PINS = document.querySelector('.map__pins');
+  var pinSize = {
+    width: 50,
+    height: 70
   };
   /**
-   * Перевод карты, формы в активный режим и получение данных с сервера
+   * Функция-коснтруктор для создания пинов
+   * @param {object} data
+   * @constructor
    */
-  var activeMode = function () {
-    window.util.removeClass('.map', 'map--faded');
-    window.util.removeClass('.ad-form', 'ad-form--disabled');
-    window.form.toggleStateFroms(false);
-    window.uploadDataServer.getData();
-    isActiveMode = true;
+  var Pin = function (data) {
+    this.pin = PIN.cloneNode(true);
+    this.positionX = data.location.x - pinSize.height * 0.5 + 'px';
+    this.positionY = data.location.y - pinSize.width + 'px';
+    this.img = data.author.avatar;
+    this.alt = data.offer.description;
+    this.offer = data.offer;
+    this.offer.avatar = data.author.avatar;
   };
-  /**
-   * Получение координат метки
-   * @param {event} downEvt
-   */
-  var onMouseDown = function (downEvt) {
-    downEvt.preventDefault();
 
-    var startCoordinate = {
-      x: downEvt.clientX,
-      y: downEvt.clientY
-    };
+  Pin.prototype.card = function (offer) {
+    window.card.show(offer);
+  };
+
+  window.pin = {
     /**
-     * Перемещение метки по карте
-     * @param {event} moveEvt
+     * Создает пин на основе конструктора
+     * @param {object} announcement
+     * @return {HTMLElement}
      */
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shift = {
-        x: startCoordinate.x - moveEvt.clientX,
-        y: startCoordinate.y - moveEvt.clientY
-      };
-
-      startCoordinate = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
-      var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
-      var locations = window.constants.locations;
-
-      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - PIN_MAIN_WIDTH) {
-        PIN_MAIN.style.left = currentCoordinateX + 'px';
-      }
-
-      if (currentCoordinateY >= locations.minY && currentCoordinateY <= locations.maxY) {
-        PIN_MAIN.style.top = currentCoordinateY + 'px';
-      }
-      window.form.setInputAddressCoordinate(true);
-    };
+    create: function (announcement) {
+      var pin = new Pin(announcement);
+      var pinNode = pin.pin;
+      pinNode.style.left = pin.positionX;
+      pinNode.style.top = pin.positionY;
+      pinNode.querySelector('img').src = pin.img;
+      pinNode.querySelector('img').alt = pin.alt;
+      pinNode.offer = pin.offer;
+      pinNode.card = pin.card;
+      return pinNode;
+    },
     /**
-     * Прекращение перемещения и отписка от событий mousemove и mouseup
-     * @param {event} mouseUp
+     * Подписывается на событие click по блоку map__pin
+     * Если клик был на пине или на картинке пина то сначала закрывает (если была уже открыта другая карточка) карточку
+     * а потом рендерит соответствующию карточку текущего пина на которым произошло событие
      */
-    var onMouseUp = function (mouseUp) {
-      mouseUp.preventDefault();
-
-      if (!isActiveMode) {
-        activeMode();
-      }
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    onClickMap: function () {
+      MAP_PINS.addEventListener('click', function (evt) {
+        if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
+          window.card.removeForRendering();
+          if (evt.target.tagName === 'IMG') {
+            evt.target.parentElement.classList.add('map__pin--active');
+            evt.target.parentElement.card(evt.target.parentElement.offer);
+          } else {
+            evt.target.classList.add('map__pin--active');
+            evt.target.card(evt.target.offer);
+          }
+        }
+      });
+    }
   };
 
-  PIN_MAIN.addEventListener('mousedown', onMouseDown);
-
-  window.mainPin = {
-    getCurrentAddress: getCurrentAddress
-  };
 })();

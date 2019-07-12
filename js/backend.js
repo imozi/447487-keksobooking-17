@@ -2,8 +2,8 @@
 /**
  * Модуль загрузки дынных с сервера и отправки данных на сервер
  */
-window.backend = (function () {
-  return {
+(function () {
+  window.backend = {
     /**
      * Загрузка данных с сервера
      * @param {string} url
@@ -30,4 +30,5 @@ window.backend = (function () {
       xhr.send();
     }
   };
+
 })();

@@ -1,8 +1,10 @@
 'use strict';
 /**
  * Модуль сортировки данных
+ * Зависимости upload.js
+ * Метод sortingData доступен для других модулей
  */
-window.sortData = (function () {
+(function () {
   /**
    * Проверка фильтра с типом жилья по значению (для сортировки данных)
    * @param {object} announcement
@@ -16,7 +18,8 @@ window.sortData = (function () {
    * Сортировка данных по значению фильтра и вывод только 5 данных
    * @return {object}
    */
-  return function () {
+  window.sortingData = function () {
     return window.dataAnnouncements.filter(checkType).slice(0, 5);
   };
+
 })();
