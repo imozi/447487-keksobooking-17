@@ -4,7 +4,7 @@
  * Доступен для других модулей.
  */
 (function () {
-  var debounceInterval = 500;
+  var DEBOUNCE_INTERVAL = 500;
 
   window.debounce = function (cb) {
     var timeout = null;
@@ -16,7 +16,7 @@
       }
       timeout = window.setTimeout(function () {
         cb.apply(null, parameters);
-      }, debounceInterval);
+      }, DEBOUNCE_INTERVAL);
     };
   };
 

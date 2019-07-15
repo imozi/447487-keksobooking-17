@@ -6,8 +6,8 @@
  */
 (function () {
   var pinMain = document.querySelector('.map__pin--main');
-  var pinMainWidth = 65;
-  var pinMainHeight = 87;
+  var PIN_MAIN_WIDTH = 65;
+  var PIN_MAIN_HEIGHT = 87;
   var isActiveMode = false;
   var locations = {
     minX: 0,
@@ -56,7 +56,7 @@
       var currentCoordinateX = pinMain.offsetLeft - shift.x;
       var currentCoordinateY = pinMain.offsetTop - shift.y;
 
-      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - pinMainWidth) {
+      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - PIN_MAIN_WIDTH) {
         pinMain.style.left = currentCoordinateX + 'px';
       }
 
@@ -94,11 +94,11 @@
   window.getCurrentAddressPin = function (mode) {
     var coordinatePinX = pinMain.offsetLeft;
     var coordinatePinY = pinMain.offsetTop;
-    var coordinatePinCenter = pinMainWidth * 0.5;
+    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
 
     return {
       x: Math.round(coordinatePinX + coordinatePinCenter),
-      y: Math.round(coordinatePinY + (mode === true ? pinMainHeight : coordinatePinCenter))
+      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
     };
   };
 

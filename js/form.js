@@ -40,6 +40,8 @@
       formInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
     }
   };
+  window.form.toggleState(true);
+  window.form.setInputAddressCoordinate();
   /**
    * Добавление нимимального значение и изменения placeholder
    * @param {string} type
@@ -72,9 +74,6 @@
 
   formSelectTimeIn.addEventListener('change', onChangeSelectOption);
   formSelectTimeOut.addEventListener('change', onChangeSelectOption);
-
-  window.form.toggleState(true);
-  window.form.setInputAddressCoordinate();
 
 })();
 

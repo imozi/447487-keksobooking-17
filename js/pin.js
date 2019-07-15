@@ -7,10 +7,8 @@
 (function () {
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var mapPins = document.querySelector('.map__pins');
-  var pinSize = {
-    width: 50,
-    height: 70
-  };
+  var PIN_WIDTH = 50;
+  var PIN_HEIGHT = 70;
   /**
    * Функция-конструктор для создания пинов
    * @param {object} data
@@ -18,8 +16,8 @@
    */
   var Pin = function (data) {
     this.pin = pinTemplate.cloneNode(true);
-    this.positionX = data.location.x - pinSize.height * 0.5 + 'px';
-    this.positionY = data.location.y - pinSize.width + 'px';
+    this.positionX = data.location.x - PIN_WIDTH * 0.5 + 'px';
+    this.positionY = data.location.y - PIN_HEIGHT + 'px';
     this.img = data.author.avatar;
     this.alt = data.offer.description;
     this.offer = data.offer;
