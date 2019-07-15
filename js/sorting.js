@@ -8,7 +8,7 @@
   /**
    * Проверка фильтра с типом жилья по значению (для сортировки данных)
    * @param {object} announcement
-   * @return {object}
+   * @return {boolean}
    */
   var checkType = function (announcement) {
     var housingTypeValue = document.querySelector('#housing-type').value;

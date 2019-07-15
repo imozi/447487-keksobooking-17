@@ -2,10 +2,10 @@
 /**
  * Модуль создания карточки объявления
  * Зависимости utils.js
- * Методы create, rendering, removeForRendering в window.card доступны для других модулей
+ * Методы create, close, onClickCloseBtn в window.card доступны для других модулей
  */
 (function () {
-  var CARD = document.querySelector('#card').content.querySelector('.map__card');
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var typesMap = {
     flat: 'Квартира',
     bungalo: 'Бунгало',
@@ -56,7 +56,7 @@
      * @return {HTMLElement}
      */
     create: function (offer) {
-      var cardNode = CARD.cloneNode(true);
+      var cardNode = cardTemplate.cloneNode(true);
       cardNode.querySelector('.popup__avatar').src = offer.avatar;
       cardNode.querySelector('.popup__title').textContent = offer.title;
       cardNode.querySelector('.popup__title').textContent = offer.title;
@@ -74,21 +74,32 @@
      * Рендерит карточку объявления
      * @param {object} info
      */
-    show: function (info) {
+    open: function (info) {
       window.rendering.card(info);
     },
     /**
-     * Удаляет открутую карточку объявления (необходимо для рендеринга новой)
+     * Удаляет открутую карточку объявления и отписывается от события keydown на документе
      */
-    removeForRendering: function () {
+    close: function () {
       var currentCard = document.querySelector('.map__card');
       var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
       if (currentCard) {
+
         window.util.clearDomElement(currentCard);
         pins.forEach(function (item) {
           item.classList.remove('map__pin--active');
         });
+
+        document.removeEventListener('keydown', window.util.onDocumentKeyPress);
       }
+    },
+    /**
+     * Удаляет карточку по событию click на кнопке "закрыть карточку"
+     */
+    onClickCloseBtn: function () {
+      var closeBtn = document.querySelector('.popup__close');
+      closeBtn.addEventListener('click', window.card.close);
     }
   };
 

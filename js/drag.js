@@ -5,9 +5,9 @@
  * Метод getCurrentAddress в window.mainPin доступен для других модулей
  */
 (function () {
-  var PIN_MAIN = document.querySelector('.map__pin--main');
-  var PIN_MAIN_WIDTH = 65;
-  var PIN_MAIN_HEIGHT = 87;
+  var pinMain = document.querySelector('.map__pin--main');
+  var pinMainWidth = 65;
+  var pinMainHeight = 87;
   var isActiveMode = false;
   var locations = {
     minX: 0,
@@ -27,7 +27,7 @@
   };
   /**
    * Получение координат метки
-   * @param {event} downEvt
+   * @param {ObjectEvent} downEvt
    */
   var onMouseDown = function (downEvt) {
     downEvt.preventDefault();
@@ -38,7 +38,7 @@
     };
     /**
      * Перемещение метки по карте
-     * @param {event} moveEvt
+     * @param {ObjectEvent} moveEvt
      */
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
@@ -53,21 +53,21 @@
         y: moveEvt.clientY
       };
 
-      var currentCoordinateX = PIN_MAIN.offsetLeft - shift.x;
-      var currentCoordinateY = PIN_MAIN.offsetTop - shift.y;
+      var currentCoordinateX = pinMain.offsetLeft - shift.x;
+      var currentCoordinateY = pinMain.offsetTop - shift.y;
 
-      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - PIN_MAIN_WIDTH) {
-        PIN_MAIN.style.left = currentCoordinateX + 'px';
+      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - pinMainWidth) {
+        pinMain.style.left = currentCoordinateX + 'px';
       }
 
       if (currentCoordinateY >= locations.minY && currentCoordinateY <= locations.maxY) {
-        PIN_MAIN.style.top = currentCoordinateY + 'px';
+        pinMain.style.top = currentCoordinateY + 'px';
       }
       window.form.setInputAddressCoordinate(true);
     };
     /**
      * Прекращение перемещения и отписка от событий mousemove и mouseup
-     * @param {event} mouseUp
+     * @param {ObjectEvent} mouseUp
      */
     var onMouseUp = function (mouseUp) {
       mouseUp.preventDefault();
@@ -84,7 +84,7 @@
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  PIN_MAIN.addEventListener('mousedown', onMouseDown);
+  pinMain.addEventListener('mousedown', onMouseDown);
 
   /**
    * Получение текущей позиции метки
@@ -92,13 +92,13 @@
    * @return {object}
    */
   window.getCurrentAddressPin = function (mode) {
-    var coordinatePinX = PIN_MAIN.offsetLeft;
-    var coordinatePinY = PIN_MAIN.offsetTop;
-    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
+    var coordinatePinX = pinMain.offsetLeft;
+    var coordinatePinY = pinMain.offsetTop;
+    var coordinatePinCenter = pinMainWidth * 0.5;
 
     return {
       x: Math.round(coordinatePinX + coordinatePinCenter),
-      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
+      y: Math.round(coordinatePinY + (mode === true ? pinMainHeight : coordinatePinCenter))
     };
   };
 
