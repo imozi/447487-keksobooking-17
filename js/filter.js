@@ -4,12 +4,12 @@
  * Зависимости rendering.js, sorting.js
  */
 (function () {
-  var MAP_FILTER = document.querySelector('.map__filters');
+  var mapFilter = document.querySelector('.map__filters');
 
   var updateRenderAnnouncements = window.debounce(function () {
     window.rendering.pin(window.sortingData());
   });
 
-  MAP_FILTER.addEventListener('change', updateRenderAnnouncements);
+  mapFilter.addEventListener('change', updateRenderAnnouncements);
 
 })();
