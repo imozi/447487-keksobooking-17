@@ -81,7 +81,7 @@
     var isGuests = checkGuestsForRooms();
 
     if (!isGuests) {
-      formSelectCapacity.setCustomValidity('Количество гостей несоответствует количеству комнат :(');
+      formSelectCapacity.setCustomValidity('Количество гостей не соответствует количеству комнат :(');
     } else {
       formSelectCapacity.setCustomValidity('');
     }
