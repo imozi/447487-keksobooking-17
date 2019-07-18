@@ -12,6 +12,9 @@
   var formPrice = form.querySelector('#price');
   var formSelectType = form.querySelector('#type');
   var formFieldsets = Array.from(form.querySelectorAll('fieldset'));
+  var formSelectRoomNumber = form.querySelector('#room_number');
+  var formSelectCapacity = form.querySelector('#capacity');
+  var formSubmitButton = form.querySelector('.ad-form__submit');
   var mapFilterSelects = Array.from(document.querySelectorAll('select'));
   var mapFilterFieldset = document.querySelector('fieldset');
   var formElements = [].concat(formFieldsets, mapFilterSelects, mapFilterFieldset);
@@ -52,28 +55,46 @@
   };
   /**
    * Изменения значений в полях заезда/выезда
-   * @param {string} time
-   */
-  var changeTime = function (time) {
-    formSelectTimeOut.value = time;
-    formSelectTimeIn.value = time;
-  };
-  /**
-   * Получение текущего элемента в таргете
    * @param {ObjectEvent} evt
    */
-  var onChangeSelectOption = function (evt) {
-    changeTime(evt.target.value);
+  var onChangeTime = function (evt) {
+    formSelectTimeOut.value = evt.target.value;
+    formSelectTimeIn.value = evt.target.value;
+  };
+  /**
+   * Проверка количество гостей количеству комнат
+   * @return {boolean}
+   */
+  var checkGuestsForRooms = function () {
+    var valueRooms = formSelectRoomNumber.value;
+    var valueGuest = formSelectCapacity.value;
+
+    if (valueRooms < valueGuest) {
+      return false;
+    }
+    return valueRooms === '100' && valueGuest === '0' || valueRooms !== '100' && valueGuest !== '0';
+  };
+  /**
+   * Проверяет, если количество гостей не соответствует количеству комнат то выводит сообщение о неверном количестве
+   */
+  var onClickSubmitButton = function () {
+    var isGuests = checkGuestsForRooms();
+
+    if (!isGuests) {
+      formSelectCapacity.setCustomValidity('Количество гостей несоответствует количеству комнат :(');
+    } else {
+      formSelectCapacity.setCustomValidity('');
+    }
   };
 
   onChangePriceOfNight(formSelectType.value);
 
-  formSelectType.addEventListener('change', function () {
-    onChangePriceOfNight(formSelectType.value);
+  formSelectType.addEventListener('change', function (evt) {
+    onChangePriceOfNight(evt.target.value);
   });
 
-  formSelectTimeIn.addEventListener('change', onChangeSelectOption);
-  formSelectTimeOut.addEventListener('change', onChangeSelectOption);
-
+  formSelectTimeIn.addEventListener('change', onChangeTime);
+  formSelectTimeOut.addEventListener('change', onChangeTime);
+  formSubmitButton.addEventListener('click', onClickSubmitButton);
 })();
 
