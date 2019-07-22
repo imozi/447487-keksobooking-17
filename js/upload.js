@@ -1,14 +1,46 @@
 'use strict';
 /**
  * Модуль получния данных с сервера
- * Зависимости rendering.js
- * Методы load, save, successLoad, successSave, errorLoad, errorSave в window.uploadDataServer доступны для других модулей
+ * Зависимости rendering.js, utils.js
+ * Методы load, save, loadTimeout в window.uploadDataServer доступны для других модулей
  */
 (function () {
   var main = document.querySelector('main');
-  var error = document.querySelector('#error').content.querySelector('.error');
-  var success = document.querySelector('#success').content.querySelector('.success');
-  var form = document.querySelector('.ad-form');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  /**
+   * Записывает данные с сервера в глобальную область видимости при успешной загрузки и вызвает один раз рендерит объявления
+   * @param {array} data
+   */
+  var successLoad = function (data) {
+    window.dataAnnouncements = data;
+    window.rendering.pin(window.sortingData());
+  };
+  /**
+   * Выводить сообщение об успешном сохранении объявления на сервере, сбрасывает форму и подписывается на события keydown, click на документе
+   * для закрытия сообщения
+   */
+  var successSave = function () {
+    main.appendChild(successTemplate.cloneNode(true));
+    window.form.reset();
+    window.util.noActiveMode();
+    document.addEventListener('keydown', onEscCloseMessageSusuccess);
+    document.addEventListener('click', onClickCloseMessageSusuccess);
+  };
+  /**
+   * Показывает сообщение об ошибке если данные не загрузились и подписывается на событие keydown, click на документе
+   * и на события click по кнопке для закрытия ошибки
+   * @param {string} message
+   */
+  var error = function (message) {
+    var errorNode = errorTemplate.cloneNode(true);
+    errorNode.querySelector('.error__message').textContent = message;
+    main.appendChild(errorNode);
+
+    onClickCloseBtnMessageError();
+    document.addEventListener('keydown', onEscCloseMessageError);
+    document.addEventListener('click', onClickCloseMessageError);
+  };
   /**
    * Закрывает сообщение об успешном сохранении данных и отписывается от событий click, keydown на документе
    */
@@ -32,15 +64,19 @@
     window.util.onClickDocument(closeMessageSusuccessSave);
   };
   /**
-   * Закрывает сообщение об ошибке и отписывается от событий click, keydown на документе,
-   * и еще раз пытается загрузить данные после закрытия
+   * Закрывает сообщение об ошибке, вызывает еще раз получение данных с сервера (если не загрузились)
+   * и отписывается от событий click, keydown на документе
    */
   var closeMessageError = function () {
     var message = document.querySelector('.error');
     message.remove();
+
+    if (!window.dataAnnouncements) {
+      window.uploadDataServer.loadTimeout();
+    }
+
     document.removeEventListener('keydown', onEscCloseMessageError);
     document.removeEventListener('click', onClickCloseMessageError);
-    window.uploadDataServer.load();
   };
   /**
    * Закрывает сообщение об ошибке по событию сlick на кнопке
@@ -62,60 +98,28 @@
   var onClickCloseMessageError = function () {
     window.util.onClickDocument(closeMessageError);
   };
-  /**
-   * Показывает сообщение об ошибке если данные не загрузились и подписывается на событие keydown, click на документе
-   * и на события click по кнопке для закрытия ошибки
-   */
-  var showError = function () {
-    main.appendChild(error.cloneNode(true));
-    onClickCloseBtnMessageError();
-    document.addEventListener('keydown', onEscCloseMessageError);
-    document.addEventListener('click', onClickCloseMessageError);
-  };
 
   window.uploadDataServer = {
     /**
      * Получение данных с сервера
      */
     load: function () {
-      window.backend.load(window.uploadDataServer.successLoad, window.uploadDataServer.errorLoad);
+      window.backend.load(successLoad, error);
     },
     /**
-     * Отправляет данные на сервер
+     * Отправление данных на сервер
      * @param {object} data
      */
     save: function (data) {
-      window.backend.save(data, window.uploadDataServer.successSave, window.uploadDataServer.errorSave);
+      window.backend.save(data, successSave, error);
     },
     /**
-     * Записывает данные с сервера в глобальную область видимости при успешной загрузки и вызвает один раз рендерит объявления
-     * @param {array} data
+     * Вызов функции load каждые 5 секунд (вызывается когда произошла ошибка при загрузке данных с сервера)
      */
-    successLoad: function (data) {
-      window.dataAnnouncements = data;
-      window.rendering.pin(window.sortingData());
-    },
-    /**
-     * Выводить сообщение об успешном сохранении объявления на сервере, сбрасывает форму и подписывается на события keydown, click на документе
-     */
-    successSave: function () {
-      main.appendChild(success.cloneNode(true));
-      form.reset();
-      window.util.noActiveMode();
-      document.addEventListener('keydown', onEscCloseMessageSusuccess);
-      document.addEventListener('click', onClickCloseMessageSusuccess);
-    },
-    /**
-     * Выводит ошибку если данные не загрузились и переводит станицу в неактивный режим
-     */
-    errorLoad: function () {
-      showError();
-    },
-    /**
-     * Выводит ошибку если данные не отправились на сервер
-     */
-    errorSave: function () {
-      showError();
+    loadTimeout: function () {
+      window.setTimeout(function () {
+        window.uploadDataServer.load();
+      }, 5000);
     }
   };
 

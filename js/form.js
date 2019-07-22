@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Состояние полей формы, валидация формы, присовение адреса метки
- * Зависимости drag.js
+ * Зависимости drag.js, upload.js, utils.js
  * Методы toggleState, setInputAddressCoordinate в window.form доступны для дргуих модулей
  */
 (function () {
@@ -15,6 +15,7 @@
   var formSelectRoomNumber = form.querySelector('#room_number');
   var formSelectCapacity = form.querySelector('#capacity');
   var formSubmitButton = form.querySelector('.ad-form__submit');
+  var formResetBtn = form.querySelector('.ad-form__reset');
   var mapFilterSelects = Array.from(document.querySelectorAll('select'));
   var mapFilterFieldset = document.querySelector('fieldset');
   var formElements = [].concat(formFieldsets, mapFilterSelects, mapFilterFieldset);
@@ -41,6 +42,9 @@
     setInputAddressCoordinate: function (mode) {
       var currentAddress = window.mainPin.getCurrentAddress(mode);
       formInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
+    },
+    reset: function () {
+      form.reset();
     }
   };
   window.form.toggleState(true);
@@ -96,6 +100,10 @@
   formSelectTimeIn.addEventListener('change', onChangeTime);
   formSelectTimeOut.addEventListener('change', onChangeTime);
   formSubmitButton.addEventListener('click', onClickSubmitButton);
+  formResetBtn.addEventListener('click', function () {
+    window.form.reset();
+    window.util.noActiveMode();
+  });
 
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();

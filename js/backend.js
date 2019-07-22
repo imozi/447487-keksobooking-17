@@ -1,6 +1,8 @@
 'use strict';
 /**
  * Модуль загрузки дынных с сервера и отправки данных на сервер
+ * Зависимости upload.js
+ * Метов load, save в window.backend доступны для других модулей
  */
 (function () {
   var LOAD_DATA_URL = 'https://js.dump.academy/keksobooking/data';
@@ -19,13 +21,14 @@
       xhr.addEventListener('load', function () {
         if (xhr.status === 200) {
           onLoad(xhr.response);
+          window.clearTimeout(window.uploadDataServer.loadTimeout);
         } else {
-          onError();
+          onError('Ошибка загрузки данных с сервера.');
         }
       });
 
       xhr.addEventListener('error', function () {
-        onError();
+        onError('Произошла ошибка соединения с сервером при загрузки данных.');
       });
 
       xhr.open('GET', urlServer);
@@ -41,15 +44,17 @@
       var urlServer = SAVE_DATA_URL;
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
-
       xhr.addEventListener('load', function () {
         if (xhr.status === 200) {
           onLoad();
         } else {
-          onError();
+          onError('Ошибка загрузки данных на сервер.');
         }
       });
 
+      xhr.addEventListener('error', function () {
+        onError('Произошла ошибка соединения с сервером при выгрузки данных.');
+      });
       xhr.open('POST', urlServer);
       xhr.send(data);
     }
