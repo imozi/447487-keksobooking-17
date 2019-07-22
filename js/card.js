@@ -2,7 +2,7 @@
 /**
  * Модуль создания карточки объявления
  * Зависимости utils.js
- * Методы create, close, onClickCloseBtn в window.card доступны для других модулей
+ * Методы create, close, onClickCloseBtn, onEscCloseCard в window.card доступны для других модулей
  */
 (function () {
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -91,7 +91,7 @@
           item.classList.remove('map__pin--active');
         });
 
-        document.removeEventListener('keydown', window.util.onDocumentKeyPress);
+        document.removeEventListener('keydown', window.card.onEscCloseCard);
       }
     },
     /**
@@ -100,6 +100,13 @@
     onClickCloseBtn: function () {
       var closeBtn = document.querySelector('.popup__close');
       closeBtn.addEventListener('click', window.card.close);
+    },
+    /**
+     * Закрывает карточку по нажатию клавиши ESC
+     * @param {ObjectEvent} evt
+     */
+    onEscCloseCard: function (evt) {
+      window.util.onKeyPressDocument(evt, window.card.close);
     }
   };
 

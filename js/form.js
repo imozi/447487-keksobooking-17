@@ -39,7 +39,7 @@
      * @param {boolean} mode
      */
     setInputAddressCoordinate: function (mode) {
-      var currentAddress = window.getCurrentAddressPin(mode);
+      var currentAddress = window.mainPin.getCurrentAddress(mode);
       formInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
     }
   };
@@ -96,5 +96,10 @@
   formSelectTimeIn.addEventListener('change', onChangeTime);
   formSelectTimeOut.addEventListener('change', onChangeTime);
   formSubmitButton.addEventListener('click', onClickSubmitButton);
+
+  form.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.uploadDataServer.save(new FormData(form));
+  });
 })();
 
