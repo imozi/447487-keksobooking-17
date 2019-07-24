@@ -1,77 +1,79 @@
 'use strict';
 /**
- * Состояние полей формы, валидация формы, присовение адреса метки
+ * Модуль изменения состояние полей формы, валидация формы, присовение адреса метки
  * Зависимости drag.js, upload.js, utils.js
- * Методы toggleState, setInputAddressCoordinate в window.form доступны для дргуих модулей
+ * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets доступны для дргуих модулей
  */
 (function () {
-  var form = document.querySelector('.ad-form');
-  var formInputAddress = form.querySelector('#address');
-  var formSelectTimeIn = form.querySelector('#timein');
-  var formSelectTimeOut = form.querySelector('#timeout');
-  var formPrice = form.querySelector('#price');
-  var formSelectType = form.querySelector('#type');
-  var formFieldsets = Array.from(form.querySelectorAll('fieldset'));
-  var formSelectRoomNumber = form.querySelector('#room_number');
-  var formSelectCapacity = form.querySelector('#capacity');
-  var formSubmitButton = form.querySelector('.ad-form__submit');
-  var formResetBtn = form.querySelector('.ad-form__reset');
-  var mapFilterSelects = Array.from(document.querySelectorAll('select'));
-  var mapFilterFieldset = document.querySelector('fieldset');
-  var formElements = [].concat(formFieldsets, mapFilterSelects, mapFilterFieldset);
+  var formMain = document.querySelector('.ad-form');
+  var formFilter = document.querySelector('.map__filters');
+  var formMainFieldsets = formMain.querySelectorAll('fieldset');
+  var formMainInputAddress = formMain.querySelector('#address');
+  var formMainSelectTimeIn = formMain.querySelector('#timein');
+  var formMainSelectTimeOut = formMain.querySelector('#timeout');
+  var formMainPrice = formMain.querySelector('#price');
+  var formMainSelectType = formMain.querySelector('#type');
+  var formMainSelectRoomNumber = formMain.querySelector('#room_number');
+  var formMainSelectCapacity = formMain.querySelector('#capacity');
+  var formMainSubmitButton = formMain.querySelector('.ad-form__submit');
+  var formMainResetBtn = formMain.querySelector('.ad-form__reset');
+  var formFilterSelects = Array.from(formFilter.querySelectorAll('select'));
+  var formFilterFieldset = formFilter.querySelector('fieldset');
+  var formFilterElements = [].concat(formFilterSelects, formFilterFieldset);
   var priceTypesMap = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
     palace: 10000
   };
-  window.form = {
-    /**
-     * Переводит поля формы в указанное состояние (активное или неактивное)
-     * @param {boolean} disabled
-     */
-    toggleState: function (disabled) {
-      formElements.forEach(function (element) {
-        element.disabled = disabled ? true : false;
-      });
-    },
-    /**
-     * Присваевание текущего адресса метки в поле адресса
-     * @param {boolean} mode
-     */
-    setInputAddressCoordinate: function (mode) {
-      var currentAddress = window.mainPin.getCurrentAddress(mode);
-      formInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
-    },
-    reset: function () {
-      form.reset();
-    }
+  /**
+   * Перевод полей формы в указанное состояние (активное или неактивное)
+   * @param {HTMLCollection} formElements
+   * @param {boolean} disabled
+   */
+  var toggleState = function (formElements, disabled) {
+    formElements.forEach(function (element) {
+      element.disabled = disabled ? true : false;
+    });
   };
-  window.form.toggleState(true);
-  window.form.setInputAddressCoordinate();
+  /**
+   * Присваевание текущего адресса метки в поле адресса
+   * @param {boolean} mode
+   */
+  var setInputAddressCoordinate = function (mode) {
+    var currentAddress = window.mainPin.getCurrentAddress(mode);
+    formMainInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
+  };
+  /**
+   * Сбрасывает главную форму и форму фильтра объявлений
+   */
+  var reset = function () {
+    formMain.reset();
+    formFilter.reset();
+  };
   /**
    * Добавление нимимального значение и изменения placeholder
    * @param {string} type
    */
   var onChangePriceOfNight = function (type) {
-    formPrice.setAttribute('min', priceTypesMap[type]);
-    formPrice.placeholder = priceTypesMap[type];
+    formMainPrice.setAttribute('min', priceTypesMap[type]);
+    formMainPrice.placeholder = priceTypesMap[type];
   };
   /**
    * Изменения значений в полях заезда/выезда
    * @param {ObjectEvent} evt
    */
   var onChangeTime = function (evt) {
-    formSelectTimeOut.value = evt.target.value;
-    formSelectTimeIn.value = evt.target.value;
+    formMainSelectTimeOut.value = evt.target.value;
+    formMainSelectTimeIn.value = evt.target.value;
   };
   /**
    * Проверка количество гостей количеству комнат
    * @return {boolean}
    */
   var checkGuestsForRooms = function () {
-    var valueRooms = formSelectRoomNumber.value;
-    var valueGuest = formSelectCapacity.value;
+    var valueRooms = formMainSelectRoomNumber.value;
+    var valueGuest = formMainSelectCapacity.value;
 
     if (valueRooms < valueGuest) {
       return false;
@@ -85,29 +87,48 @@
     var isGuests = checkGuestsForRooms();
 
     if (!isGuests) {
-      formSelectCapacity.setCustomValidity('Количество гостей не соответствует количеству комнат :(');
+      formMainSelectCapacity.setCustomValidity('Количество гостей не соответствует количеству комнат :(');
     } else {
-      formSelectCapacity.setCustomValidity('');
+      formMainSelectCapacity.setCustomValidity('');
     }
   };
+  /**
+   * Переводит поля форм в неактивное состояние, добавляет значение в поле адреса, изменяет цену за ночь
+   * Начальное состояние на момент открытия сайта
+   */
+  var formInitialState = function () {
+    toggleState(formMainFieldsets, true);
+    toggleState(formFilterElements, true);
+    setInputAddressCoordinate();
+    onChangePriceOfNight(formMainSelectType.value);
+  };
 
-  onChangePriceOfNight(formSelectType.value);
+  formInitialState();
 
-  formSelectType.addEventListener('change', function (evt) {
+  formMainSelectType.addEventListener('change', function (evt) {
     onChangePriceOfNight(evt.target.value);
   });
-
-  formSelectTimeIn.addEventListener('change', onChangeTime);
-  formSelectTimeOut.addEventListener('change', onChangeTime);
-  formSubmitButton.addEventListener('click', onClickSubmitButton);
-  formResetBtn.addEventListener('click', function () {
-    window.form.reset();
-    window.util.noActiveMode();
+  formMainSelectTimeIn.addEventListener('change', onChangeTime);
+  formMainSelectTimeOut.addEventListener('change', onChangeTime);
+  formMainSubmitButton.addEventListener('click', onClickSubmitButton);
+  formMainResetBtn.addEventListener('click', function () {
+    reset();
+    window.util.pageNotActiveMode();
   });
 
-  form.addEventListener('submit', function (evt) {
+  formMain.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.uploadDataServer.save(new FormData(form));
+    window.uploadDataServer.save(new FormData(formMain));
   });
-})();
+  /**
+   * Экспорт в глобальную область видимости
+   */
+  window.form = {
+    toggleState: toggleState,
+    setInputAddressCoordinate: setInputAddressCoordinate,
+    reset: reset,
+    filterElements: formFilterElements,
+    mainFieldsets: formMainFieldsets
+  };
 
+})();

@@ -1,8 +1,8 @@
 'use strict';
 /**
- * Перемещение главной метки, перевод карты и формы в активный режим
+ * Модуль перемещения главного пина, получение текущего адреса пина, изначальная позиция пина
  * Зависимости utils.js, form.js, upload.js
- * Метод getCurrentAddress, mainPosition в window.mainPin доступены для других модулей
+ * Метод getCurrentAddress, mainPosition в window.mainPin доступны для других модулей
  */
 (function () {
   var pinMain = document.querySelector('.map__pin--main');
@@ -17,7 +17,29 @@
     maxY: 630
   };
   /**
-   * Получение координат метки
+   * Получение текущей позиции пина
+   * @param {boolean} mode
+   * @return {object}
+   */
+  var getCurrentAddress = function (mode) {
+    var coordinatePinX = pinMain.offsetLeft;
+    var coordinatePinY = pinMain.offsetTop;
+    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
+
+    return {
+      x: Math.round(coordinatePinX + coordinatePinCenter),
+      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
+    };
+  };
+  /**
+   * Изначальная позиция пина
+   */
+  var mainPosition = function () {
+    pinMain.style.left = PIN_MAIN_POSITION_X + 'px';
+    pinMain.style.top = PIN_MAIN_POSITION_Y + 'px';
+  };
+  /**
+   * Получение координат пина
    * @param {ObjectEvent} downEvt
    */
   var onMouseDown = function (downEvt) {
@@ -28,7 +50,7 @@
       y: downEvt.clientY
     };
     /**
-     * Перемещение метки по карте
+     * Перемещение пина по карте
      * @param {ObjectEvent} moveEvt
      */
     var onMouseMove = function (moveEvt) {
@@ -63,8 +85,8 @@
     var onMouseUp = function (mouseUp) {
       mouseUp.preventDefault();
 
-      if (!window.util.isActiveMode) {
-        window.util.activeMode();
+      if (!window.util.isPageActiveMode) {
+        window.util.pageActiveMode();
       }
 
       document.removeEventListener('mousemove', onMouseMove);
@@ -76,31 +98,12 @@
   };
 
   pinMain.addEventListener('mousedown', onMouseDown);
-
-
+  /**
+   * Экспорт в глобальную область видимости
+   */
   window.mainPin = {
-    /**
-     * Получение текущей позиции метки
-     * @param {boolean} mode
-     * @return {object}
-     */
-    getCurrentAddress: function (mode) {
-      var coordinatePinX = pinMain.offsetLeft;
-      var coordinatePinY = pinMain.offsetTop;
-      var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
-
-      return {
-        x: Math.round(coordinatePinX + coordinatePinCenter),
-        y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
-      };
-    },
-    /**
-     * Изначальная позиция главного пина
-     */
-    mainPosition: function () {
-      pinMain.style.left = PIN_MAIN_POSITION_X + 'px';
-      pinMain.style.top = PIN_MAIN_POSITION_Y + 'px';
-    }
+    getCurrentAddress: getCurrentAddress,
+    mainPosition: mainPosition
   };
 
 })();
