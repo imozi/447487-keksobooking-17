@@ -2,13 +2,15 @@
 /**
  * Модуль загрузки данных с сервера и отправки данных на сервер
  * Зависимости upload.js
- * Метов load, save в window.backend доступны для других модулей
+ * Методы load, save, переменная isLoadError (флаг для опереления что ошибка произошла именно на стадии загрузки данных с сервера)
+ * в window.backend доступны для других модулей
  */
 (function () {
   var LOAD_DATA_URL = 'https://js.dump.academy/keksobooking/data';
   var SAVE_DATA_URL = 'https://js.dump.academy/keksobooking';
   /**
-   * Загрузка данных с сервера, при успешной загрке выполняет функцию, удаляет таймер вызова с функции, и меняет флаг ошибки
+   * Загрузка данных с сервера, при успешной загрке вызывает функцию, удаляет таймер вызова с функции
+   * если произошла ошибка вызывает функцию и меняет флаг на true
    * @param {function} onLoad функция которую нужно выполнить при успешной загрузки данных
    * @param {function} onError функция которую нужоно выполнить если произошла ошибка загрузки данных
    */
@@ -20,16 +22,15 @@
       if (xhr.status === 200) {
         onLoad(xhr.response);
         window.clearTimeout(window.uploadDataServer.loadTimeout);
-        window.util.isLoadError = false;
       } else {
         onError('Ошибка загрузки данных с сервера.');
-        window.util.isLoadError = true;
+        window.backend.isLoadError = true;
       }
     });
 
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения с сервером при загрузки данных.');
-      window.util.isLoadError = true;
+      window.backend.isLoadError = true;
     });
 
     xhr.open('GET', urlServer);
@@ -64,7 +65,8 @@
    */
   window.backend = {
     load: load,
-    save: save
+    save: save,
+    isLoadError: false
   };
 
 })();

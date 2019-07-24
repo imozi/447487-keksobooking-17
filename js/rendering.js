@@ -2,20 +2,33 @@
 /**
  * Модуль рендеринга объявлений и карточки объявления
  * Зависимости utils.js, pin.js, card.js, form.js
- * Методы pin, card в window.rendering доступены для других модулей
+ * Методы pin, card, clear в window.rendering доступены для других модулей
  */
 (function () {
   var map = document.querySelector('.map');
   var containerPins = map.querySelector('.map__pins');
   /**
+   * Удаляет пины и открытую карточки объявления
+   */
+  var clear = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
+    if (pins) {
+      pins.forEach(function (element) {
+        window.util.clearDomElement(element);
+      });
+      window.card.close();
+    }
+  };
+  /**
    * Сначало удаляет если есть существующие пины объявлений а затем рендерит новые в DOM из полученных данных,
-   * подписывается на событие click после рендеринга и активирует форму фильтра
+   * подписывается на событие click после рендеринга и переводит в активное состояние форму фильтра
    * @param {object} data
    */
   var pin = function (data) {
     var fragment = document.createDocumentFragment();
 
-    window.util.clearMap();
+    clear();
 
     data.forEach(function (item) {
       if (item.offer) {
@@ -45,7 +58,8 @@
    */
   window.rendering = {
     pin: pin,
-    card: card
+    card: card,
+    clear: clear
   };
 
 })();

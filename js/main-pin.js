@@ -1,7 +1,7 @@
 'use strict';
 /**
- * Модуль перемещения главного пина, получение текущего адреса пина, изначальная позиция пина
- * Зависимости utils.js, form.js, upload.js
+ * Модуль перемещения главного пина
+ * Зависимости page.js, form.js, upload.js
  * Метод getCurrentAddress, mainPosition в window.mainPin доступны для других модулей
  */
 (function () {
@@ -85,8 +85,8 @@
     var onMouseUp = function (mouseUp) {
       mouseUp.preventDefault();
 
-      if (!window.util.isPageActiveMode) {
-        window.util.pageActiveMode();
+      if (!window.page.isActiveMode) {
+        window.page.activeMode();
       }
 
       document.removeEventListener('mousemove', onMouseMove);

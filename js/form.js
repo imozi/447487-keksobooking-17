@@ -1,8 +1,8 @@
 'use strict';
 /**
- * Модуль изменения состояние полей формы, валидация формы, присовение адреса метки
- * Зависимости drag.js, upload.js, utils.js
- * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets доступны для дргуих модулей
+ * Модуль изменения формы, валидация формы, присовение адреса метки
+ * Зависимости main-pin.js, upload.js, page.js
+ * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets в window.form доступны для дргуих модулей
  */
 (function () {
   var formMain = document.querySelector('.ad-form');
@@ -27,7 +27,14 @@
     palace: 10000
   };
   /**
-   * Перевод полей формы в указанное состояние (активное или неактивное)
+   * Сбрасывает главную форму и форму фильтра объявлений
+   */
+  var reset = function () {
+    formMain.reset();
+    formFilter.reset();
+  };
+  /**
+   * Перевод переданных полей формы в указанное состояние (активное или неактивное)
    * @param {HTMLCollection} formElements
    * @param {boolean} disabled
    */
@@ -45,14 +52,7 @@
     formMainInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
   };
   /**
-   * Сбрасывает главную форму и форму фильтра объявлений
-   */
-  var reset = function () {
-    formMain.reset();
-    formFilter.reset();
-  };
-  /**
-   * Добавление нимимального значение и изменения placeholder
+   * Добавление минимального значение и изменения placeholder
    * @param {string} type
    */
   var onChangePriceOfNight = function (type) {
@@ -113,7 +113,7 @@
   formMainSubmitButton.addEventListener('click', onClickSubmitButton);
   formMainResetBtn.addEventListener('click', function () {
     reset();
-    window.util.pageNotActiveMode();
+    window.page.notActiveMode();
   });
 
   formMain.addEventListener('submit', function (evt) {

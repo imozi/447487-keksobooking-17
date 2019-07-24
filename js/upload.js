@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль обработки данных с сервера и отправки данных на сервер
- * Зависимости backend.js,rendering.js
+ * Зависимости backend.js, rendering.js, page.js
  * Методы load, save, loadTimeout в window.uploadDataServer доступны для других модулей
  */
 (function () {
@@ -12,17 +12,17 @@
     window.backend.load(saveDataToGlobalArea, window.message.error);
   };
   /**
-   * Сохраняет данные с сервера в глобальную область видимости при успешной загрузки и вызвает один раз рендерит объявления из полученных данных
-   * если сейчас активный режим страницы
+   * Сохраняет данные с сервера в глобальную область видимости при успешной загрузки
+   * и вызвает один раз рендерит объявления из полученных данных
+   * если страница находится в активном состоянии
    * @param {array} data
    */
   var saveDataToGlobalArea = function (data) {
     window.dataAnnouncements = data;
 
-    if (window.util.isPageActiveMode) {
+    if (window.page.isActiveMode) {
       window.rendering.pin(window.sortingData());
     }
-
   };
   /**
    * Отправление данных на сервер
@@ -32,7 +32,7 @@
     window.backend.save(data, window.message.successSave, window.message.error);
   };
   /**
-   * Вызов функции load каждые 5 секунд (вызывается когда произошла ошибка при загрузке данных с сервера)
+   * Вызов функции load через 5 секунд (вызывается когда произошла ошибка при загрузке данных с сервера)
    */
   var loadTimeout = function () {
     window.setTimeout(function () {

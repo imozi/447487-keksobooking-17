@@ -1,7 +1,7 @@
 'use strict';
 /**
- * Модуль показа сообщений при загруке с сервера и отправки данных на сервер
- * Зависимости form.js, utils.js
+ * Модуль показа сообщений при загруке данных с сервера и отправки данных на сервер
+ * Зависимости backend.js, page.js, utils.js
  * Методы successSave, error в window.message доступны для других модулей
  */
 (function () {
@@ -9,12 +9,12 @@
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
   /**
-   * Показывает сообщение об успешном сохранении объявления на сервере, сбрасывает форму и подписывается на события keydown, click на документе
-   * для закрытия сообщения
+   * Показывает сообщение об успешном сохранении объявления на сервере, переводит странцу в неактивное состояние
+   * и подписывается на события keydown, click на документе для закрытия сообщения
    */
   var successSave = function () {
     main.appendChild(successTemplate.cloneNode(true));
-    window.util.pageNotActiveMode();
+    window.page.notActiveMode();
     document.addEventListener('keydown', onEscCloseMessageSusuccess);
     document.addEventListener('click', onClickCloseMessageSusuccess);
   };
@@ -55,16 +55,16 @@
     window.util.onClickDocument(closeMessageSusuccessSave);
   };
   /**
-   * Закрывает сообщение об ошибке, вызывает еще раз получение данных с сервера (если ошибка произошла во время загрузки данных с сервера)
+   * Закрывает сообщение об ошибке, вызывает еще раз функцию получение данных с сервера (если ошибка произошла во время загрузки данных с сервера)
    * и отписывается от событий click, keydown на документе
    */
   var closeMessageError = function () {
     var message = document.querySelector('.error');
     message.remove();
 
-    if (!window.dataAnnouncements && window.util.isLoadError) {
+    if (window.backend.isLoadError) {
       window.uploadDataServer.loadTimeout();
-      window.util.isLoadError = false;
+      window.backend.isLoadError = false;
     }
 
     document.removeEventListener('keydown', onEscCloseMessageError);
