@@ -76,7 +76,7 @@
     window.rendering.card(info);
   };
   /**
-   * Удаляет открутую карточку объявления и отписывается от события keydown на документе
+   * Закрывает открутую карточку объявления и отписывается от события keydown на документе
    */
   var close = function () {
     var currentCard = document.querySelector('.map__card');

@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль состояния страницы
- * Зависимости form.js, filter.js, upload.js, rendering.js, main-pin.js, utils.js
+ * Зависимости form.js, rendering.js, main-pin.js, utils.js
  * Методы activeMode, notActiveMode в window.page доступны для других модулей
  * переменная isActiveMode (флаг для определения активного режима)
  */
@@ -27,10 +27,9 @@
     window.util.addClass('.map', 'map--faded');
     window.util.addClass('.ad-form', 'ad-form--disabled');
     window.form.reset();
-    window.form.toggleState(window.form.mainFieldsets, true);
-    window.form.toggleState(window.form.filterElements, true);
-    window.form.setInputAddressCoordinate();
+    window.form.initialState();
     window.form.removeOnChangeFilterValue();
+    window.form.removeEventListenerAllMainForm();
   };
   /**
    * Экспорт в глобальную область видимости

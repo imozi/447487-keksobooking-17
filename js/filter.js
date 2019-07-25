@@ -1,7 +1,6 @@
 'use strict';
 /**
- * Модуль фильтра данных объявлений
- * Зависимости upload.js
+ * Модуль фильтрации данных объявлений
  * Метод window.filteringData доступен для других модулей
  */
 (function () {
@@ -14,7 +13,7 @@
 
   var filterСriteria = {
     /**
-     * Проверка данных со значением поля фильтра "тип жилья"
+     * Сравнение данных объявления со значением поля фильтра "тип жилья"
      * @param {object} data
      * @param {HTMLElement} field
      * @return {boolean}
@@ -23,7 +22,7 @@
       return data.offer.type === field.value;
     },
     /**
-     * Проверка данных со значением поля фильтра "цена за ночь"
+     * Сравнение данных объявления со значением поля фильтра "цена за ночь"
      * @param {object} data
      * @param {HTMLElement} field
      * @return {boolean}
@@ -32,7 +31,7 @@
       return data.offer.price >= housingPriceMap[field.value][0] && data.offer.price <= housingPriceMap[field.value][1];
     },
     /**
-     * Проверка данных со значением поля фильтра "количество комнат"
+     * Сравнение данных объявления со значением поля фильтра "количество комнат"
      * @param {object} data
      * @param {HTMLElement} field
      * @return {boolean}
@@ -41,7 +40,7 @@
       return data.offer.rooms.toString() === field.value;
     },
     /**
-     * Проверка данных со значением поля фильтра "количество гостей"
+     * Сравнение данных объявления со значением поля фильтра "количество гостей"
      * @param {object} data
      * @param {HTMLElement} field
      * @return {boolean}
@@ -50,7 +49,7 @@
       return data.offer.guests.toString() === field.value;
     },
     /**
-     * Проверка данных со значением поля фильтра "дополнительные удобства"
+     * Сравнение данных объявления с выбраными значениями поля фильтра "дополнительные удобства"
      * @param {object} data
      * @param {HTMLElement} field
      * @return {boolean}

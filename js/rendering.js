@@ -8,7 +8,7 @@
   var map = document.querySelector('.map');
   var containerPins = map.querySelector('.map__pins');
   /**
-   * Удаляет пины и открытую карточки объявления
+   * Удаляет пины и открытую карточку объявления
    */
   var clear = function () {
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -52,11 +52,11 @@
     document.addEventListener('keydown', window.card.onEscCloseCard);
   };
   /**
-   * Рендерит отфильтрованные объявления
+   * Рендерит пины по отфильтрованным данным объявления
    */
-  var filteredPin = function () {
+  var filteredDataPin = window.debounce(function () {
     pin(window.filteringData());
-  };
+  });
   /**
    * Экспорт в глобальную область видимости
    */
@@ -64,7 +64,7 @@
     pin: pin,
     card: card,
     clear: clear,
-    filteredPin: filteredPin
+    filteredDataPin: filteredDataPin
   };
 
 })();

@@ -1,13 +1,13 @@
 'use strict';
 /**
- * Модуль изменения форм страницы, валидация главной формы, присовение адреса метки
- * Зависимости main-pin.js, upload.js, page.js
- * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets в window.form доступны для дргуих модулей
+ * Модуль изменения форм страницы, валидация главной формы
+ * Зависимости main-pin.js, rendering.js, page.js
+ * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets, onChangeFilterValue,
+ * removeOnChangeFilterValue, initialState, removeEventListenerAllMainForm в window.form доступны для дргуих модулей
  */
-var formFilter = document.querySelector('.map__filters');
 (function () {
   var formMain = document.querySelector('.ad-form');
-
+  var formFilter = document.querySelector('.map__filters');
   var formMainFieldsets = formMain.querySelectorAll('fieldset');
   var formMainInputAddress = formMain.querySelector('#address');
   var formMainSelectTimeIn = formMain.querySelector('#timein');
@@ -31,13 +31,13 @@ var formFilter = document.querySelector('.map__filters');
    * Подписывает на событие change формы фильтра, при изменении значений показывает соответсвующие объявления
    */
   var onChangeFilterValue = function () {
-    formFilter.addEventListener('change', window.rendering.filteredPin);
+    formFilter.addEventListener('change', window.rendering.filteredDataPin);
   };
   /**
    * Отписывается от события change на форме фильтра
    */
   var removeOnChangeFilterValue = function () {
-    formFilter.removeEventListener('change', window.rendering.filteredPin);
+    formFilter.removeEventListener('change', window.rendering.filteredDataPin);
   };
   /**
    * Сбрасывает главную форму и форму фильтра объявлений
@@ -57,7 +57,7 @@ var formFilter = document.querySelector('.map__filters');
     });
   };
   /**
-   * Присваевание текущего адресса метки в поле адресса
+   * Присваевает текущий адрес метки в поле адреса главной формы
    * @param {boolean} mode
    */
   var setInputAddressCoordinate = function (mode) {
@@ -65,15 +65,14 @@ var formFilter = document.querySelector('.map__filters');
     formMainInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
   };
   /**
-   * Добавление минимального значение и изменения placeholder
-   * @param {string} type
+   * Добавление минимального значение и изменения placeholder в соответствии со значение "тип жилья" главной формы
    */
-  var onChangePriceOfNight = function (type) {
-    formMainPrice.setAttribute('min', priceTypesMap[type]);
-    formMainPrice.placeholder = priceTypesMap[type];
+  var onChangePriceOfNight = function () {
+    formMainPrice.setAttribute('min', priceTypesMap[formMainSelectType.value]);
+    formMainPrice.placeholder = priceTypesMap[formMainSelectType.value];
   };
   /**
-   * Изменения значений в полях заезда/выезда
+   * Изменения значений в полях заезда/выезда главной формы
    * @param {ObjectEvent} evt
    */
   var onChangeTime = function (evt) {
@@ -107,32 +106,41 @@ var formFilter = document.querySelector('.map__filters');
   };
   /**
    * Переводит поля форм в неактивное состояние, добавляет значение в поле адреса, изменяет цену за ночь
-   * Начальное состояние на момент открытия сайта
+   * (начальное состояние форм на момент открытия сайта)
    */
-  var formInitialState = function () {
+  var initialState = function () {
     toggleState(formMainFieldsets, true);
     toggleState(formFilterElements, true);
     setInputAddressCoordinate();
-    onChangePriceOfNight(formMainSelectType.value);
+    onChangePriceOfNight();
+  };
+  initialState();
+  /**
+   * Сохраняет данные гавной формы на сервер
+   * @param {ObjectEvent} evt
+   */
+  var saveDataFormOnServer = function (evt) {
+    evt.preventDefault();
+    window.uploadDataServer.save(new FormData(formMain));
   };
 
-  formInitialState();
-
-  formMainSelectType.addEventListener('change', function (evt) {
-    onChangePriceOfNight(evt.target.value);
-  });
+  formMainSelectType.addEventListener('change', onChangePriceOfNight);
   formMainSelectTimeIn.addEventListener('change', onChangeTime);
   formMainSelectTimeOut.addEventListener('change', onChangeTime);
   formMainSubmitButton.addEventListener('click', onClickSubmitButton);
-  formMainResetBtn.addEventListener('click', function () {
-    reset();
-    window.page.notActiveMode();
-  });
-
-  formMain.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    window.uploadDataServer.save(new FormData(formMain));
-  });
+  formMainResetBtn.addEventListener('click', window.page.notActiveMode);
+  formMain.addEventListener('submit', saveDataFormOnServer);
+  /**
+   * Удаляет всех слушателей событий с главной формы
+   */
+  var removeEventListenerAllMainForm = function () {
+    formMainSelectType.removeEventListener('change', onChangePriceOfNight);
+    formMainSelectTimeIn.removeEventListener('change', onChangeTime);
+    formMainSelectTimeOut.removeEventListener('change', onChangeTime);
+    formMainSubmitButton.removeEventListener('click', onClickSubmitButton);
+    formMainResetBtn.removeEventListener('click', window.page.notActiveMode);
+    formMain.removeEventListener('submit', saveDataFormOnServer);
+  };
   /**
    * Экспорт в глобальную область видимости
    */
@@ -143,7 +151,9 @@ var formFilter = document.querySelector('.map__filters');
     filterElements: formFilterElements,
     mainFieldsets: formMainFieldsets,
     onChangeFilterValue: onChangeFilterValue,
-    removeOnChangeFilterValue: removeOnChangeFilterValue
+    removeOnChangeFilterValue: removeOnChangeFilterValue,
+    initialState: initialState,
+    removeEventListenerAllMainForm: removeEventListenerAllMainForm
   };
 
 })();
