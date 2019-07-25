@@ -1,12 +1,13 @@
 'use strict';
 /**
- * Модуль изменения формы, валидация формы, присовение адреса метки
+ * Модуль изменения форм страницы, валидация главной формы, присовение адреса метки
  * Зависимости main-pin.js, upload.js, page.js
  * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets в window.form доступны для дргуих модулей
  */
+var formFilter = document.querySelector('.map__filters');
 (function () {
   var formMain = document.querySelector('.ad-form');
-  var formFilter = document.querySelector('.map__filters');
+
   var formMainFieldsets = formMain.querySelectorAll('fieldset');
   var formMainInputAddress = formMain.querySelector('#address');
   var formMainSelectTimeIn = formMain.querySelector('#timein');
@@ -25,6 +26,18 @@
     flat: 1000,
     house: 5000,
     palace: 10000
+  };
+  /**
+   * Подписывает на событие change формы фильтра, при изменении значений показывает соответсвующие объявления
+   */
+  var onChangeFilterValue = function () {
+    formFilter.addEventListener('change', window.rendering.filteredPin);
+  };
+  /**
+   * Отписывается от события change на форме фильтра
+   */
+  var removeOnChangeFilterValue = function () {
+    formFilter.removeEventListener('change', window.rendering.filteredPin);
   };
   /**
    * Сбрасывает главную форму и форму фильтра объявлений
@@ -128,7 +141,9 @@
     setInputAddressCoordinate: setInputAddressCoordinate,
     reset: reset,
     filterElements: formFilterElements,
-    mainFieldsets: formMainFieldsets
+    mainFieldsets: formMainFieldsets,
+    onChangeFilterValue: onChangeFilterValue,
+    removeOnChangeFilterValue: removeOnChangeFilterValue
   };
 
 })();

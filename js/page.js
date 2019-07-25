@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль состояния страницы
- * Зависимости form.js, upload.js, rendering.js, main-pin.js, utils.js
+ * Зависимости form.js, filter.js, upload.js, rendering.js, main-pin.js, utils.js
  * Методы activeMode, notActiveMode в window.page доступны для других модулей
  * переменная isActiveMode (флаг для определения активного режима)
  */
@@ -30,6 +30,7 @@
     window.form.toggleState(window.form.mainFieldsets, true);
     window.form.toggleState(window.form.filterElements, true);
     window.form.setInputAddressCoordinate();
+    window.form.removeOnChangeFilterValue();
   };
   /**
    * Экспорт в глобальную область видимости

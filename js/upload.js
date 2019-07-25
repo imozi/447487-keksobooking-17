@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль обработки данных с сервера и отправки данных на сервер
- * Зависимости backend.js, rendering.js, page.js
+ * Зависимости backend.js, rendering.js, page.js, filter.js
  * Методы load, save, loadTimeout в window.uploadDataServer доступны для других модулей
  */
 (function () {
@@ -13,7 +13,7 @@
   };
   /**
    * Сохраняет данные с сервера в глобальную область видимости при успешной загрузки
-   * и вызвает один раз рендерит объявления из полученных данных
+   * и вызвает один раз рендерит объявления из полученных данных и переводит в активное состояние форму фильтра
    * если страница находится в активном состоянии
    * @param {array} data
    */
@@ -21,7 +21,9 @@
     window.dataAnnouncements = data;
 
     if (window.page.isActiveMode) {
-      window.rendering.pin(window.sortingData());
+      window.rendering.pin(window.filteringData());
+      window.form.toggleState(window.form.filterElements, false);
+      window.form.onChangeFilterValue();
     }
   };
   /**
