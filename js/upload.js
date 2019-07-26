@@ -1,36 +1,44 @@
 'use strict';
 /**
- * Модуль получния данных с сервера
- * Зависимости rendering.js
- * Методы load, success, error в window.uploadDataServer доступны для других модулей
+ * Модуль обработки данных с сервера и отправки данных на сервер
+ * Зависимости backend.js, rendering.js, page.js, filter.js
+ * Методы load, save в window.uploadDataServer доступны для других модулей
  */
 (function () {
-  var SERVER_URL = 'https://js.dump.academy/keksobooking/data';
-  var main = document.querySelector('main');
-  var error = document.querySelector('#error').content.querySelector('.error');
+  /**
+   * Получение данных с сервера
+   */
+  var load = function () {
+    window.backend.load(saveDataToGlobalArea, window.message.error);
+  };
+  /**
+   * Сохраняет данные с сервера в глобальную область видимости при успешной загрузки
+   * и вызвает один раз рендерит объявления из полученных данных, и переводит в активное состояние форму фильтра,
+   * подписывается на события change формы фильтра если страница находится в активном состоянии
+   * @param {array} data
+   */
+  var saveDataToGlobalArea = function (data) {
+    window.dataAnnouncements = data;
 
-  window.uploadDataServer = {
-    /**
-     * Получение данных с сервера
-     */
-    load: function () {
-      window.backend.load(SERVER_URL, window.uploadDataServer.success, window.uploadDataServer.error);
-    },
-    /**
-     * Записывает данные с сервера в глобальную область видимости при успешной загрузки и вызвает один раз рендерит объявления
-     * @param {array} data
-     */
-    success: function (data) {
-      window.dataAnnouncements = data;
-      window.rendering.pin(window.sortingData());
-    },
-    /**
-     * Выводит ошибки если данные не загрузились
-     * @return {HTMLElement}
-     */
-    error: function () {
-      return main.appendChild(error.cloneNode(true));
+    if (window.page.isActiveMode) {
+      window.rendering.pin(window.filteringData());
+      window.form.toggleState(window.form.filterElements, false);
+      window.form.onChangeFilterValue();
     }
+  };
+  /**
+   * Отправление данных на сервер
+   * @param {object} data
+   */
+  var save = function (data) {
+    window.backend.save(data, window.message.successSave, window.message.error);
+  };
+  /**
+   * Экспорт в глобальную область видимости
+   */
+  window.uploadDataServer = {
+    load: load,
+    save: save,
   };
 
 })();

@@ -1,73 +1,91 @@
 'use strict';
 /**
- * Состояние полей формы, валидация формы, присовение адреса метки
- * Зависимости drag.js
- * Методы toggleState, setInputAddressCoordinate в window.form доступны для дргуих модулей
+ * Модуль изменения форм страницы, валидация главной формы
+ * Зависимости main-pin.js, rendering.js, page.js
+ * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets, onChangeFilterValue,
+ * removeOnChangeFilterValue, initialState, mainAddEventListeners, removeEventListenerAllMainForm в window.form доступны для дргуих модулей
  */
 (function () {
-  var form = document.querySelector('.ad-form');
-  var formInputAddress = form.querySelector('#address');
-  var formSelectTimeIn = form.querySelector('#timein');
-  var formSelectTimeOut = form.querySelector('#timeout');
-  var formPrice = form.querySelector('#price');
-  var formSelectType = form.querySelector('#type');
-  var formFieldsets = Array.from(form.querySelectorAll('fieldset'));
-  var formSelectRoomNumber = form.querySelector('#room_number');
-  var formSelectCapacity = form.querySelector('#capacity');
-  var formSubmitButton = form.querySelector('.ad-form__submit');
-  var mapFilterSelects = Array.from(document.querySelectorAll('select'));
-  var mapFilterFieldset = document.querySelector('fieldset');
-  var formElements = [].concat(formFieldsets, mapFilterSelects, mapFilterFieldset);
+  var formMain = document.querySelector('.ad-form');
+  var formFilter = document.querySelector('.map__filters');
+  var formMainFieldsets = formMain.querySelectorAll('fieldset');
+  var formMainInputAddress = formMain.querySelector('#address');
+  var formMainSelectTimeIn = formMain.querySelector('#timein');
+  var formMainSelectTimeOut = formMain.querySelector('#timeout');
+  var formMainPrice = formMain.querySelector('#price');
+  var formMainSelectType = formMain.querySelector('#type');
+  var formMainSelectRoomNumber = formMain.querySelector('#room_number');
+  var formMainSelectCapacity = formMain.querySelector('#capacity');
+  var formMainSubmitButton = formMain.querySelector('.ad-form__submit');
+  var formMainResetBtn = formMain.querySelector('.ad-form__reset');
+  var formFilterSelects = Array.from(formFilter.querySelectorAll('select'));
+  var formFilterFieldset = formFilter.querySelector('fieldset');
+  var formFilterElements = [].concat(formFilterSelects, formFilterFieldset);
   var priceTypesMap = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
     palace: 10000
   };
-  window.form = {
-    /**
-     * Переводит поля формы в указанное состояние (активное или неактивное)
-     * @param {boolean} disabled
-     */
-    toggleState: function (disabled) {
-      formElements.forEach(function (element) {
-        element.disabled = disabled ? true : false;
-      });
-    },
-    /**
-     * Присваевание текущего адресса метки в поле адресса
-     * @param {boolean} mode
-     */
-    setInputAddressCoordinate: function (mode) {
-      var currentAddress = window.getCurrentAddressPin(mode);
-      formInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
-    }
-  };
-  window.form.toggleState(true);
-  window.form.setInputAddressCoordinate();
   /**
-   * Добавление нимимального значение и изменения placeholder
-   * @param {string} type
+   * Подписывает на событие change формы фильтра, при изменении значений показывает соответсвующие объявления
    */
-  var onChangePriceOfNight = function (type) {
-    formPrice.setAttribute('min', priceTypesMap[type]);
-    formPrice.placeholder = priceTypesMap[type];
+  var onChangeFilterValue = function () {
+    formFilter.addEventListener('change', window.rendering.filteredDataPin);
   };
   /**
-   * Изменения значений в полях заезда/выезда
+   * Отписывается от события change на форме фильтра
+   */
+  var removeOnChangeFilterValue = function () {
+    formFilter.removeEventListener('change', window.rendering.filteredDataPin);
+  };
+  /**
+   * Сбрасывает главную форму и форму фильтра объявлений
+   */
+  var reset = function () {
+    formMain.reset();
+    formFilter.reset();
+  };
+  /**
+   * Перевод переданных полей формы в указанное состояние (активное или неактивное)
+   * @param {HTMLCollection} formElements
+   * @param {boolean} disabled
+   */
+  var toggleState = function (formElements, disabled) {
+    formElements.forEach(function (element) {
+      element.disabled = disabled ? true : false;
+    });
+  };
+  /**
+   * Присваевает текущий адрес метки в поле адреса главной формы
+   * @param {boolean} mode
+   */
+  var setInputAddressCoordinate = function (mode) {
+    var currentAddress = window.mainPin.getCurrentAddress(mode);
+    formMainInputAddress.value = currentAddress.x + ', ' + currentAddress.y;
+  };
+  /**
+   * Добавление минимального значение и изменения placeholder в соответствии со значение "тип жилья" главной формы
+   */
+  var onChangePriceOfNight = function () {
+    formMainPrice.setAttribute('min', priceTypesMap[formMainSelectType.value]);
+    formMainPrice.placeholder = priceTypesMap[formMainSelectType.value];
+  };
+  /**
+   * Изменения значений в полях заезда/выезда главной формы
    * @param {ObjectEvent} evt
    */
   var onChangeTime = function (evt) {
-    formSelectTimeOut.value = evt.target.value;
-    formSelectTimeIn.value = evt.target.value;
+    formMainSelectTimeOut.value = evt.target.value;
+    formMainSelectTimeIn.value = evt.target.value;
   };
   /**
    * Проверка количество гостей количеству комнат
    * @return {boolean}
    */
   var checkGuestsForRooms = function () {
-    var valueRooms = formSelectRoomNumber.value;
-    var valueGuest = formSelectCapacity.value;
+    var valueRooms = formMainSelectRoomNumber.value;
+    var valueGuest = formMainSelectCapacity.value;
 
     if (valueRooms < valueGuest) {
       return false;
@@ -81,20 +99,66 @@
     var isGuests = checkGuestsForRooms();
 
     if (!isGuests) {
-      formSelectCapacity.setCustomValidity('Количество гостей несоответствует количеству комнат :(');
+      formMainSelectCapacity.setCustomValidity('Количество гостей не соответствует количеству комнат :(');
     } else {
-      formSelectCapacity.setCustomValidity('');
+      formMainSelectCapacity.setCustomValidity('');
     }
   };
+  /**
+   * Переводит поля форм в неактивное состояние, добавляет значение в поле адреса, изменяет цену за ночь,
+   * функция вызывается сразу (начальное состояние полей форм на момент открытия сайта)
+   */
+  var initialState = function () {
+    toggleState(formMainFieldsets, true);
+    toggleState(formFilterElements, true);
+    setInputAddressCoordinate();
+    onChangePriceOfNight();
+  };
+  initialState();
+  /**
+   * Сохраняет данные главной формы на сервер
+   * @param {ObjectEvent} evt
+   */
+  var saveDataFormOnServer = function (evt) {
+    evt.preventDefault();
+    window.uploadDataServer.save(new FormData(formMain));
+  };
+  /**
+   * Подписывается на события change, click, submit на полях главной формы
+   */
+  var mainAddEventListeners = function () {
+    formMainSelectType.addEventListener('change', onChangePriceOfNight);
+    formMainSelectTimeIn.addEventListener('change', onChangeTime);
+    formMainSelectTimeOut.addEventListener('change', onChangeTime);
+    formMainSubmitButton.addEventListener('click', onClickSubmitButton);
+    formMainResetBtn.addEventListener('click', window.page.notActiveMode);
+    formMain.addEventListener('submit', saveDataFormOnServer);
+  };
+  /**
+   * Удаляет всех слушателей событий с главной формы
+   */
+  var mainRemoveAllEventListener = function () {
+    formMainSelectType.removeEventListener('change', onChangePriceOfNight);
+    formMainSelectTimeIn.removeEventListener('change', onChangeTime);
+    formMainSelectTimeOut.removeEventListener('change', onChangeTime);
+    formMainSubmitButton.removeEventListener('click', onClickSubmitButton);
+    formMainResetBtn.removeEventListener('click', window.page.notActiveMode);
+    formMain.removeEventListener('submit', saveDataFormOnServer);
+  };
+  /**
+   * Экспорт в глобальную область видимости
+   */
+  window.form = {
+    toggleState: toggleState,
+    setInputAddressCoordinate: setInputAddressCoordinate,
+    reset: reset,
+    filterElements: formFilterElements,
+    mainFieldsets: formMainFieldsets,
+    onChangeFilterValue: onChangeFilterValue,
+    removeOnChangeFilterValue: removeOnChangeFilterValue,
+    initialState: initialState,
+    mainAddEventListeners: mainAddEventListeners,
+    mainRemoveAllEventListener: mainRemoveAllEventListener
+  };
 
-  onChangePriceOfNight(formSelectType.value);
-
-  formSelectType.addEventListener('change', function (evt) {
-    onChangePriceOfNight(evt.target.value);
-  });
-
-  formSelectTimeIn.addEventListener('change', onChangeTime);
-  formSelectTimeOut.addEventListener('change', onChangeTime);
-  formSubmitButton.addEventListener('click', onClickSubmitButton);
 })();
-

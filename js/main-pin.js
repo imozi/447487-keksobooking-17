@@ -1,14 +1,15 @@
 'use strict';
 /**
- * Перемещение главной метки, перевод карты и формы в активный режим
- * Зависимости utils.js, form.js, upload.js
- * Метод getCurrentAddress в window.mainPin доступен для других модулей
+ * Модуль перемещения главного пина
+ * Зависимости page.js, form.js, upload.js
+ * Метод getCurrentAddress, mainPosition в window.mainPin доступны для других модулей
  */
 (function () {
   var pinMain = document.querySelector('.map__pin--main');
   var PIN_MAIN_WIDTH = 65;
   var PIN_MAIN_HEIGHT = 87;
-  var isActiveMode = false;
+  var PIN_MAIN_POSITION_X = 570;
+  var PIN_MAIN_POSITION_Y = 375;
   var locations = {
     minX: 0,
     maxX: 1200,
@@ -16,17 +17,29 @@
     maxY: 630
   };
   /**
-   * Перевод карты, формы в активный режим и получение данных с сервера
+   * Получение текущей позиции пина
+   * @param {boolean} mode
+   * @return {object}
    */
-  var activeMode = function () {
-    window.util.removeClass('.map', 'map--faded');
-    window.util.removeClass('.ad-form', 'ad-form--disabled');
-    window.form.toggleState(false);
-    window.uploadDataServer.load();
-    isActiveMode = true;
+  var getCurrentAddress = function (mode) {
+    var coordinatePinX = pinMain.offsetLeft;
+    var coordinatePinY = pinMain.offsetTop;
+    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
+
+    return {
+      x: Math.round(coordinatePinX + coordinatePinCenter),
+      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
+    };
   };
   /**
-   * Получение координат метки
+   * Изначальная позиция пина
+   */
+  var mainPosition = function () {
+    pinMain.style.left = PIN_MAIN_POSITION_X + 'px';
+    pinMain.style.top = PIN_MAIN_POSITION_Y + 'px';
+  };
+  /**
+   * Получение координат пина
    * @param {ObjectEvent} downEvt
    */
   var onMouseDown = function (downEvt) {
@@ -37,7 +50,7 @@
       y: downEvt.clientY
     };
     /**
-     * Перемещение метки по карте
+     * Перемещение пина по карте
      * @param {ObjectEvent} moveEvt
      */
     var onMouseMove = function (moveEvt) {
@@ -72,8 +85,8 @@
     var onMouseUp = function (mouseUp) {
       mouseUp.preventDefault();
 
-      if (!isActiveMode) {
-        activeMode();
+      if (!window.page.isActiveMode) {
+        window.page.activeMode();
       }
 
       document.removeEventListener('mousemove', onMouseMove);
@@ -85,21 +98,12 @@
   };
 
   pinMain.addEventListener('mousedown', onMouseDown);
-
   /**
-   * Получение текущей позиции метки
-   * @param {boolean} mode
-   * @return {object}
+   * Экспорт в глобальную область видимости
    */
-  window.getCurrentAddressPin = function (mode) {
-    var coordinatePinX = pinMain.offsetLeft;
-    var coordinatePinY = pinMain.offsetTop;
-    var coordinatePinCenter = PIN_MAIN_WIDTH * 0.5;
-
-    return {
-      x: Math.round(coordinatePinX + coordinatePinCenter),
-      y: Math.round(coordinatePinY + (mode === true ? PIN_MAIN_HEIGHT : coordinatePinCenter))
-    };
+  window.mainPin = {
+    getCurrentAddress: getCurrentAddress,
+    mainPosition: mainPosition
   };
 
 })();

@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Модуль создания метки объявления
+ * Модуль создания пина объявления
  * Зависимости модуль card.js
  * Методы create, onClickMap в window.pin доступны для других модулей
  */
@@ -27,46 +27,50 @@
   Pin.prototype.card = function (offer) {
     window.card.open(offer);
   };
-
-  window.pin = {
+  /**
+   * Создает пин на основе конструктора
+   * @param {object} announcement
+   * @return {HTMLElement}
+   */
+  var create = function (announcement) {
+    var pin = new Pin(announcement);
+    var pinNode = pin.pin;
+    pinNode.style.left = pin.positionX;
+    pinNode.style.top = pin.positionY;
+    pinNode.querySelector('img').src = pin.img;
+    pinNode.querySelector('img').alt = pin.alt;
+    pinNode.offer = pin.offer;
+    pinNode.card = pin.card;
+    return pinNode;
+  };
+  /**
+   * Подписывается на событие click по блоку map__pin
+   * Если клик был на пине или на картинке пина то сначала закрывает (если была уже открыта другая карточка) карточку
+   * а потом рендерит соответствующию карточку текущего пина на которым произошло событие
+   */
+  var onClickPinMap = function () {
     /**
-     * Создает пин на основе конструктора
-     * @param {object} announcement
-     * @return {HTMLElement}
+     * @param {ObjectEvent} evt
      */
-    create: function (announcement) {
-      var pin = new Pin(announcement);
-      var pinNode = pin.pin;
-      pinNode.style.left = pin.positionX;
-      pinNode.style.top = pin.positionY;
-      pinNode.querySelector('img').src = pin.img;
-      pinNode.querySelector('img').alt = pin.alt;
-      pinNode.offer = pin.offer;
-      pinNode.card = pin.card;
-      return pinNode;
-    },
-    /**
-     * Подписывается на событие click по блоку map__pin
-     * Если клик был на пине или на картинке пина то сначала закрывает (если была уже открыта другая карточка) карточку
-     * а потом рендерит соответствующию карточку текущего пина на которым произошло событие
-     */
-    onClickPinMap: function () {
-      /**
-       * @param {ObjectEvent} evt
-       */
-      mapPins.addEventListener('click', function (evt) {
-        if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
-          window.card.close();
-          if (evt.target.tagName === 'IMG') {
-            evt.target.parentElement.classList.add('map__pin--active');
-            evt.target.parentElement.card(evt.target.parentElement.offer);
-          } else {
-            evt.target.classList.add('map__pin--active');
-            evt.target.card(evt.target.offer);
-          }
+    mapPins.addEventListener('click', function (evt) {
+      if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
+        window.card.close();
+        if (evt.target.tagName === 'IMG') {
+          evt.target.parentElement.classList.add('map__pin--active');
+          evt.target.parentElement.card(evt.target.parentElement.offer);
+        } else {
+          evt.target.classList.add('map__pin--active');
+          evt.target.card(evt.target.offer);
         }
-      });
-    }
+      }
+    });
+  };
+  /**
+   * Экспорт в глобальную область видимости
+   */
+  window.pin = {
+    create: create,
+    onClickPinMap: onClickPinMap
   };
 
 })();
