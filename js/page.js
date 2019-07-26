@@ -7,7 +7,7 @@
  */
 (function () {
   /**
-   * Перевод страницы в активное состояние и получение данных с сервера
+   * Перевод страницы в активное состояние и получение данных с сервера.
    */
   var activeMode = function () {
     window.page.isActiveMode = true;
@@ -15,6 +15,7 @@
     window.util.removeClass('.ad-form', 'ad-form--disabled');
     window.form.toggleState(window.form.mainFieldsets, false);
     window.form.setInputAddressCoordinate(true);
+    window.form.mainAddEventListeners();
     window.uploadDataServer.load();
   };
   /**
@@ -29,7 +30,7 @@
     window.form.reset();
     window.form.initialState();
     window.form.removeOnChangeFilterValue();
-    window.form.removeEventListenerAllMainForm();
+    window.form.mainRemoveAllEventListener();
   };
   /**
    * Экспорт в глобальную область видимости

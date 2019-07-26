@@ -8,6 +8,7 @@
   var main = document.querySelector('main');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var TIME_OUT_LOAD = 5000;
   /**
    * Показывает сообщение об успешном сохранении объявления на сервере, переводит странцу в неактивное состояние
    * и подписывается на события keydown, click на документе для закрытия сообщения
@@ -46,7 +47,7 @@
    * @param {ObjectEvent} evt
    */
   var onEscCloseMessageSusuccess = function (evt) {
-    window.util.onKeyPressDocument(evt, closeMessageSusuccessSave);
+    window.util.onEscPressDocument(evt, closeMessageSusuccessSave);
   };
   /**
    * Закрывает сообщение об успешном сохранении данных по собитию click на произвольную область
@@ -56,14 +57,16 @@
   };
   /**
    * Закрывает сообщение об ошибке, вызывает еще раз функцию получение данных с сервера (если ошибка произошла во время загрузки данных с сервера)
-   * и отписывается от событий click, keydown на документе
+   * которая выполнится через 5 секунд и отписывается от событий click, keydown на документе
    */
   var closeMessageError = function () {
     var message = document.querySelector('.error');
     message.remove();
 
     if (window.backend.isLoadError) {
-      window.uploadDataServer.loadTimeout();
+      window.setTimeout(function () {
+        window.uploadDataServer.load();
+      }, TIME_OUT_LOAD);
       window.backend.isLoadError = false;
     }
 
@@ -82,7 +85,7 @@
    * @param {ObjectEvent} evt
    */
   var onEscCloseMessageError = function (evt) {
-    window.util.onKeyPressDocument(evt, closeMessageError);
+    window.util.onEscPressDocument(evt, closeMessageError);
   };
   /**
    * Закрывает сообщение об ошибке по собитию click на произвольную область

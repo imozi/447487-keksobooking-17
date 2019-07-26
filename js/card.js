@@ -93,7 +93,7 @@
     }
   };
   /**
-   * Удаляет карточку по событию click на кнопке "закрыть карточку"
+   * Закрывает карточку по событию click на кнопке "закрыть карточку"
    */
   var onClickCloseBtn = function () {
     var closeBtn = document.querySelector('.popup__close');
@@ -104,7 +104,7 @@
    * @param {ObjectEvent} evt
    */
   var onEscCloseCard = function (evt) {
-    window.util.onKeyPressDocument(evt, close);
+    window.util.onEscPressDocument(evt, close);
   };
   /**
    * Экспорт в глобальную область видимости

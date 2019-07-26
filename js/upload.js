@@ -2,7 +2,7 @@
 /**
  * Модуль обработки данных с сервера и отправки данных на сервер
  * Зависимости backend.js, rendering.js, page.js, filter.js
- * Методы load, save, loadTimeout в window.uploadDataServer доступны для других модулей
+ * Методы load, save в window.uploadDataServer доступны для других модулей
  */
 (function () {
   /**
@@ -34,20 +34,11 @@
     window.backend.save(data, window.message.successSave, window.message.error);
   };
   /**
-   * Вызов функции load через 5 секунд (вызывается когда произошла ошибка при загрузке данных с сервера)
-   */
-  var loadTimeout = function () {
-    window.setTimeout(function () {
-      load();
-    }, 5000);
-  };
-  /**
    * Экспорт в глобальную область видимости
    */
   window.uploadDataServer = {
     load: load,
     save: save,
-    loadTimeout: loadTimeout
   };
 
 })();

@@ -45,7 +45,7 @@
    * @param {ObjectEvent} evt
    * @param {function} func - функция котокую нужно выполнить
    */
-  var onKeyPressDocument = function (evt, func) {
+  var onEscPressDocument = function (evt, func) {
     isEscEvent(evt, func);
   };
   /**
@@ -62,7 +62,7 @@
     removeClass: removeClass,
     addClass: addClass,
     clearDomElement: clearDomElement,
-    onKeyPressDocument: onKeyPressDocument,
+    onEscPressDocument: onEscPressDocument,
     onClickDocument: onClickDocument
   };
 

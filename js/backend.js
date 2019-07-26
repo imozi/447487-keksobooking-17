@@ -8,9 +8,9 @@
 (function () {
   var LOAD_DATA_URL = 'https://js.dump.academy/keksobooking/data';
   var SAVE_DATA_URL = 'https://js.dump.academy/keksobooking';
+  var SUCCESS_STATUS_CODE = 200;
   /**
-   * Загрузка данных с сервера, при успешной загрке вызывает функцию, удаляет таймер вызова с функции
-   * если произошла ошибка вызывает функцию и меняет флаг на true
+   * Загрузка данных с сервера, если произошла ошибка вызывает функцию и меняет флаг isLoadError на true
    * @param {function} onLoad функция которую нужно выполнить при успешной загрузки данных
    * @param {function} onError функция которую нужоно выполнить если произошла ошибка загрузки данных
    */
@@ -19,9 +19,8 @@
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_STATUS_CODE) {
         onLoad(xhr.response);
-        window.clearTimeout(window.uploadDataServer.loadTimeout);
       } else {
         onError('Ошибка загрузки данных с сервера.');
         window.backend.isLoadError = true;
@@ -47,7 +46,7 @@
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_STATUS_CODE) {
         onLoad();
       } else {
         onError('Ошибка загрузки данных на сервер.');
