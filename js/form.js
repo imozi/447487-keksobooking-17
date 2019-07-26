@@ -113,7 +113,8 @@
     toggleState(formFilterElements, true);
     setInputAddressCoordinate();
     onChangePriceOfNight();
-  }();
+  };
+  initialState();
   /**
    * Сохраняет данные главной формы на сервер
    * @param {ObjectEvent} evt
