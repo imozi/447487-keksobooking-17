@@ -17,6 +17,7 @@
     window.form.setInputAddressCoordinate(true);
     window.form.mainAddEventListeners();
     window.uploadDataServer.load();
+    window.mainPin.removeOnEnterPress();
   };
   /**
    * Перевод страницы в неактивное состояние
@@ -24,7 +25,7 @@
   var notActiveMode = function () {
     window.page.isActiveMode = false;
     window.rendering.clear();
-    window.mainPin.mainPosition();
+    window.mainPin.setDefaultPosition();
     window.util.addClass('.map', 'map--faded');
     window.util.addClass('.ad-form', 'ad-form--disabled');
     window.form.reset();

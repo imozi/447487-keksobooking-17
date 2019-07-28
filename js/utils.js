@@ -5,6 +5,7 @@
  */
 (function () {
   var ESC_CODE = 27;
+  var ENTER_KEYCODE = 13;
   /**
    * Удалить нужный класс
    * @param {selector} element
@@ -41,12 +42,30 @@
     }
   };
   /**
+   * Проверяет если нажата клавиша ENTER то выполняет переданую функцию
+   * @param {ObjectEvent} evt
+   * @param {function} action функцию которую надо вызвать
+   */
+  var isEnterEvent = function (evt, action) {
+    if (evt.keyCode === ENTER_KEYCODE) {
+      action();
+    }
+  };
+  /**
    * По нажатию на кнопку ESC на документе выполняет переданую функцию
    * @param {ObjectEvent} evt
    * @param {function} func - функция котокую нужно выполнить
    */
   var onEscPressDocument = function (evt, func) {
     isEscEvent(evt, func);
+  };
+  /**
+   * По нажатию на кнопку ENTER на элементе (который слушает это событие) выполняет переданую функцию
+   * @param {ObjectEvent} evt
+   * @param {function} func - функция котокую нужно выполнить
+   */
+  var onEnterPressElement = function (evt, func) {
+    isEnterEvent(evt, func);
   };
   /**
    * Выполняет функцию по событию click на документе
@@ -63,7 +82,8 @@
     addClass: addClass,
     clearDomElement: clearDomElement,
     onEscPressDocument: onEscPressDocument,
-    onClickDocument: onClickDocument
+    onClickDocument: onClickDocument,
+    onEnterPressElement: onEnterPressElement
   };
 
 })();

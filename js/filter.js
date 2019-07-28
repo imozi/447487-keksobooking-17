@@ -69,7 +69,7 @@
   window.filteringData = function () {
     return window.dataAnnouncements.filter(function (item) {
       return window.form.filterElements.every(function (field) {
-        return field.value === 'any' ? true : filterСriteria[field.id](item, field);
+        return field.value === 'any' || filterСriteria[field.id](item, field);
       });
     }).slice(0, QUANTITY_OUTPUT_DATA);
   };
