@@ -34,9 +34,26 @@
   /**
    * Изначальная позиция пина
    */
-  var mainPosition = function () {
+  var setDefaultPosition = function () {
     pinMain.style.left = PIN_MAIN_POSITION_X + 'px';
     pinMain.style.top = PIN_MAIN_POSITION_Y + 'px';
+  };
+  /**
+   * Переводит в активный режим страницу по нажатию клавиши ENTER на главном пине
+   * @param {ObjectEvent} evt
+   */
+  var onEnterPress = function (evt) {
+    window.util.onEnterPressElement(evt, window.page.activeMode);
+  };
+  /**
+   * Подписывается на событие keydown на главном пине для перевода страницы в активный режим
+   */
+  pinMain.addEventListener('keydown', onEnterPress);
+  /**
+   * Отписывается от события keydown на главной пине
+   */
+  var removeOnEnterPress = function () {
+    pinMain.removeEventListener('keydown', onEnterPress);
   };
   /**
    * Получение координат пина
@@ -103,7 +120,8 @@
    */
   window.mainPin = {
     getCurrentAddress: getCurrentAddress,
-    mainPosition: mainPosition
+    setDefaultPosition: setDefaultPosition,
+    removeOnEnterPress: removeOnEnterPress
   };
 
 })();
