@@ -18,6 +18,7 @@
     window.form.mainAddEventListeners();
     window.uploadDataServer.load();
     window.mainPin.removeOnEnterPress();
+    window.uploadImg.setEventListeners();
   };
   /**
    * Перевод страницы в неактивное состояние
@@ -32,6 +33,8 @@
     window.form.initialState();
     window.form.removeOnChangeFilterValue();
     window.form.mainRemoveAllEventListener();
+    window.uploadImg.removeEventListeners();
+    window.uploadImg.reset();
   };
   /**
    * Экспорт в глобальную область видимости
