@@ -34,7 +34,6 @@
     window.form.removeOnChangeFilterValue();
     window.form.mainRemoveAllEventListener();
     window.uploadImg.removeEventListeners();
-    window.uploadImg.reset();
   };
   /**
    * Экспорт в глобальную область видимости

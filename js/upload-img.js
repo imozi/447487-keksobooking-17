@@ -5,7 +5,6 @@
  * Методы setEventListeners, removeEventListeners, reset доступны для других модулей
  */
 (function () {
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var fileChooserAvatar = document.querySelector('#avatar');
   var fileChooserPhoto = document.querySelector('#images');
   var avatarDropZone = document.querySelector('.ad-form-header__drop-zone');
@@ -13,8 +12,11 @@
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
   var photoPreview = document.querySelector('.ad-form__photo');
   var containerPhoto = document.querySelector('.ad-form__photo-container');
-  var dragAndDropEvents = ['dragenter', 'dragover', 'dragleave', 'drop'];
-  var standartAvatar = 'img/muffin-grey.svg';
+  var fileTypesMap = ['gif', 'jpg', 'jpeg', 'png'];
+  var dragAndDropEvents = {
+    enter: ['dragenter', 'dragover'],
+    leave: ['dragleave', 'drop']
+  };
   /**
    * Показывает загруженное изображение аватара
    * @param {ObjectEvent} evt
@@ -27,7 +29,7 @@
       var reader = new FileReader();
       reader.readAsDataURL(file);
 
-      var matches = FILE_TYPES.some(function (item) {
+      var matches = fileTypesMap.some(function (item) {
         return fileName.endsWith(item);
       });
 
@@ -39,7 +41,7 @@
     }
   };
   /**
-   * Создает контайнер с изображением жилья и вставляет в DOM
+   * Создает контайнер с изображением жилья и добавляет в DOM
    * @param {dataUrl} src
    */
   var createPhotoElements = function (src) {
@@ -57,7 +59,7 @@
     }
   };
   /**
-   * Показывает загруженные изображения фотографий
+   * Показывает загруженные изображения жилья
    * @param {ObjectEvent} evt
    */
   var previewPhoto = function (evt) {
@@ -69,7 +71,7 @@
         var itemName = file.name.toLowerCase();
         reader.readAsDataURL(file);
 
-        var matches = FILE_TYPES.some(function (type) {
+        var matches = fileTypesMap.some(function (type) {
           return itemName.endsWith(type);
         });
 
@@ -82,19 +84,7 @@
     }
   };
   /**
-   * Удаляет все загруженные изображение, возвращает аватару стандатное изображение
-   */
-  var reset = function () {
-    var photos = document.querySelectorAll('.ad-form__photo');
-    var containerImg = photoPreview.cloneNode(false);
-    avatarPreview.src = standartAvatar;
-    photos.forEach(function (element) {
-      window.util.clearDomElement(element);
-    });
-    containerPhoto.appendChild(containerImg);
-  };
-  /**
-   * Отменяет действие по умолчанию и оставливает распростанение события
+   * Отменяет действие по умолчанию и оставливает распространение события
    * @param {ObjectEvent} evt
    */
   var preventDefaults = function (evt) {
@@ -102,18 +92,18 @@
     evt.stopPropagation();
   };
   /**
-   * Подсвечивает зону в которую можно переместить изображения для загрузке на сервер
+   * Подсвечивает зону в которую можно переместить изображения для загрузки на сервер
    * @param {ObjectEvent} evt
    */
-  var DropZoneActive = function (evt) {
+  var dropZoneEnter = function (evt) {
     evt.target.style.backgroundColor = '#2ecc71';
     evt.target.style.color = '#ffffff';
   };
   /**
-   * Убирает подстветку с зоны в которую можно переместить изображения для загрузке на сервер
+   * Убирает подстветку с зоны в которую можно переместить изображения для загрузки на сервер
    * @param {ObjectEvent} evt
    */
-  var DropZoneNotActive = function (evt) {
+  var dropZoneLeave = function (evt) {
     evt.target.style.backgroundColor = '';
     evt.target.style.color = '';
   };
@@ -151,17 +141,17 @@
    * Добавляет все слушатели событий для загрузки изображений аватара и изображений жилья
    */
   var setEventListeners = function () {
-    dragAndDropEvents.forEach(function (eventName) {
+    [].concat(dragAndDropEvents.enter, dragAndDropEvents.leave).forEach(function (eventName) {
       avatarDropZone.addEventListener(eventName, preventDefaults);
       photoDropZone.addEventListener(eventName, preventDefaults);
     });
-    dragAndDropEvents.slice(0, 2).forEach(function (eventName) {
-      avatarDropZone.addEventListener(eventName, DropZoneActive);
-      photoDropZone.addEventListener(eventName, DropZoneActive);
+    dragAndDropEvents.enter.forEach(function (eventName) {
+      avatarDropZone.addEventListener(eventName, dropZoneEnter);
+      photoDropZone.addEventListener(eventName, dropZoneEnter);
     });
-    dragAndDropEvents.slice(2, 4).forEach(function (eventName) {
-      avatarDropZone.addEventListener(eventName, DropZoneNotActive);
-      photoDropZone.addEventListener(eventName, DropZoneNotActive);
+    dragAndDropEvents.leave.forEach(function (eventName) {
+      avatarDropZone.addEventListener(eventName, dropZoneLeave);
+      photoDropZone.addEventListener(eventName, dropZoneLeave);
     });
 
     avatarDropZone.addEventListener('drop', onDropAvatarDropZone);
@@ -173,17 +163,17 @@
    * Удаляет всех слушателей событий загрузки изображений аватара и изображений жилья
    */
   var removeEventListeners = function () {
-    dragAndDropEvents.forEach(function (eventName) {
+    [].concat(dragAndDropEvents.enter, dragAndDropEvents.leave).forEach(function (eventName) {
       avatarDropZone.removeEventListener(eventName, preventDefaults);
       photoDropZone.removeEventListener(eventName, preventDefaults);
     });
-    dragAndDropEvents.slice(0, 2).forEach(function (eventName) {
-      avatarDropZone.removeEventListener(eventName, DropZoneActive);
-      photoDropZone.removeEventListener(eventName, DropZoneActive);
+    dragAndDropEvents.enter.forEach(function (eventName) {
+      avatarDropZone.removeEventListener(eventName, dropZoneEnter);
+      photoDropZone.removeEventListener(eventName, dropZoneEnter);
     });
-    dragAndDropEvents.slice(2, 4).forEach(function (eventName) {
-      avatarDropZone.removeEventListener(eventName, DropZoneNotActive);
-      photoDropZone.removeEventListener(eventName, DropZoneNotActive);
+    dragAndDropEvents.leave.forEach(function (eventName) {
+      avatarDropZone.removeEventListener(eventName, dropZoneLeave);
+      photoDropZone.removeEventListener(eventName, dropZoneLeave);
     });
 
     avatarDropZone.removeEventListener('drop', onDropAvatarDropZone);
@@ -196,8 +186,7 @@
    */
   window.uploadImg = {
     setEventListeners: setEventListeners,
-    removeEventListeners: removeEventListeners,
-    reset: reset
+    removeEventListeners: removeEventListeners
   };
 
 })();
