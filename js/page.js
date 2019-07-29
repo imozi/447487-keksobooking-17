@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль состояния страницы
- * Зависимости form.js, rendering.js, main-pin.js, utils.js
+ * Зависимости form.js, rendering.js, main-pin.js, upload-img.js, utils.js
  * Методы activeMode, notActiveMode в window.page доступны для других модулей
  * переменная isActiveMode (флаг для определения активного режима)
  */

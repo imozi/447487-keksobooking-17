@@ -1,8 +1,7 @@
 'use strict';
 /**
  * Модуль загрузки изображений аватара и изображений жилья
- * Зависимости utils.js
- * Методы setEventListeners, removeEventListeners, reset доступны для других модулей
+ * Методы setEventListeners, removeEventListeners доступны для других модулей
  */
 (function () {
   var fileChooserAvatar = document.querySelector('#avatar');

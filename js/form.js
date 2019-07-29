@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль изменения форм страницы, валидация главной формы
- * Зависимости main-pin.js, rendering.js, page.js
+ * Зависимости main-pin.js, rendering.js, page.js, utils.js
  * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets, onChangeFilterValue,
  * removeOnChangeFilterValue, initialState, mainAddEventListeners, removeEventListenerAllMainForm в window.form доступны для дргуих модулей
  */
