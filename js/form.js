@@ -1,11 +1,12 @@
 'use strict';
 /**
  * Модуль изменения форм страницы, валидация главной формы
- * Зависимости main-pin.js, rendering.js, page.js
+ * Зависимости main-pin.js, rendering.js, page.js, utils.js
  * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets, onChangeFilterValue,
  * removeOnChangeFilterValue, initialState, mainAddEventListeners, removeEventListenerAllMainForm в window.form доступны для дргуих модулей
  */
 (function () {
+  var STANDART_AVATAR = 'img/muffin-grey.svg';
   var formMain = document.querySelector('.ad-form');
   var formFilter = document.querySelector('.map__filters');
   var formMainFieldsets = formMain.querySelectorAll('fieldset');
@@ -43,6 +44,19 @@
    * Сбрасывает главную форму и форму фильтра объявлений
    */
   var reset = function () {
+    var avatar = formMain.querySelector('.ad-form-header__preview img');
+    var photos = formMain.querySelectorAll('.ad-form__photo');
+    avatar.src = STANDART_AVATAR;
+
+    if (photos[0].firstChild) {
+      window.util.clearDomElement(photos[0].firstChild);
+    }
+
+    photos.forEach(function (item, index) {
+      if (index >= 1) {
+        window.util.clearDomElement(item);
+      }
+    });
     formMain.reset();
     formFilter.reset();
   };

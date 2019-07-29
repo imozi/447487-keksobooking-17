@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль состояния страницы
- * Зависимости form.js, rendering.js, main-pin.js, utils.js
+ * Зависимости form.js, rendering.js, main-pin.js, upload-img.js, utils.js
  * Методы activeMode, notActiveMode в window.page доступны для других модулей
  * переменная isActiveMode (флаг для определения активного режима)
  */
@@ -18,6 +18,7 @@
     window.form.mainAddEventListeners();
     window.uploadDataServer.load();
     window.mainPin.removeOnEnterPress();
+    window.uploadImg.setEventListeners();
   };
   /**
    * Перевод страницы в неактивное состояние
@@ -32,6 +33,7 @@
     window.form.initialState();
     window.form.removeOnChangeFilterValue();
     window.form.mainRemoveAllEventListener();
+    window.uploadImg.removeEventListeners();
   };
   /**
    * Экспорт в глобальную область видимости
