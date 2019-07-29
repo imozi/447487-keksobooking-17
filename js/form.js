@@ -22,7 +22,7 @@
   var formFilterSelects = Array.from(formFilter.querySelectorAll('select'));
   var formFilterFieldset = formFilter.querySelector('fieldset');
   var formFilterElements = [].concat(formFilterSelects, formFilterFieldset);
-  var priceTypesMap = {
+  var PriceTypesMap = {
     bungalo: 0,
     flat: 1000,
     house: 5000,
@@ -82,8 +82,8 @@
    * Добавление минимального значение и изменения placeholder в соответствии со значение "тип жилья" главной формы
    */
   var onChangePriceOfNight = function () {
-    formMainPrice.setAttribute('min', priceTypesMap[formMainSelectType.value]);
-    formMainPrice.placeholder = priceTypesMap[formMainSelectType.value];
+    formMainPrice.setAttribute('min', PriceTypesMap[formMainSelectType.value]);
+    formMainPrice.placeholder = PriceTypesMap[formMainSelectType.value];
   };
   /**
    * Изменения значений в полях заезда/выезда главной формы

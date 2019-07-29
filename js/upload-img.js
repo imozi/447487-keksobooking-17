@@ -11,7 +11,7 @@
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
   var photoPreview = document.querySelector('.ad-form__photo');
   var containerPhoto = document.querySelector('.ad-form__photo-container');
-  var fileTypesMap = ['gif', 'jpg', 'jpeg', 'png'];
+  var FileTypesMap = ['gif', 'jpg', 'jpeg', 'png'];
   var dragAndDropEvents = {
     enter: ['dragenter', 'dragover'],
     leave: ['dragleave', 'drop']
@@ -28,7 +28,7 @@
       var reader = new FileReader();
       reader.readAsDataURL(file);
 
-      var matches = fileTypesMap.some(function (item) {
+      var matches = FileTypesMap.some(function (item) {
         return fileName.endsWith(item);
       });
 
@@ -70,7 +70,7 @@
         var itemName = file.name.toLowerCase();
         reader.readAsDataURL(file);
 
-        var matches = fileTypesMap.some(function (type) {
+        var matches = FileTypesMap.some(function (type) {
           return itemName.endsWith(type);
         });
 

@@ -5,7 +5,7 @@
  */
 (function () {
   var QUANTITY_OUTPUT_DATA = 5;
-  var housingPriceMap = {
+  var HousingPriceMap = {
     low: [0, 9999],
     middle: [10000, 50000],
     high: [50000, Infinity]
@@ -28,7 +28,7 @@
      * @return {boolean}
      */
     'housing-price': function (data, field) {
-      return data.offer.price >= housingPriceMap[field.value][0] && data.offer.price <= housingPriceMap[field.value][1];
+      return data.offer.price >= HousingPriceMap[field.value][0] && data.offer.price <= HousingPriceMap[field.value][1];
     },
     /**
      * Сравнение данных объявления со значением поля фильтра "количество комнат"

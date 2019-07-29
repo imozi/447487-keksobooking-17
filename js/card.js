@@ -6,7 +6,7 @@
  */
 (function () {
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-  var typesMap = {
+  var TypesMap = {
     flat: 'Квартира',
     bungalo: 'Бунгало',
     house: 'Дом',
@@ -60,7 +60,7 @@
     cardNode.querySelector('.popup__title').textContent = offer.title;
     cardNode.querySelector('.popup__text--address').textContent = offer.address;
     cardNode.querySelector('.popup__text--price').textContent = offer.price + ' ₽/ночь';
-    cardNode.querySelector('.popup__type').textContent = typesMap[offer.type];
+    cardNode.querySelector('.popup__type').textContent = TypesMap[offer.type];
     cardNode.querySelector('.popup__text--capacity').textContent = offer.rooms + ' комнаты для ' + offer.guests + ' гостей';
     cardNode.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin + ' выезд до ' + offer.checkin;
     cardNode.querySelector('.popup__description').textContent = offer.description;
