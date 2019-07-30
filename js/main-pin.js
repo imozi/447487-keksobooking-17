@@ -10,11 +10,11 @@
   var PIN_MAIN_HEIGHT = 87;
   var PIN_MAIN_POSITION_X = 570;
   var PIN_MAIN_POSITION_Y = 375;
-  var locations = {
-    minX: 0,
-    maxX: 1200,
-    minY: 130,
-    maxY: 630
+  var MapRestriction = {
+    MIN_X: 0,
+    MAX_X: 1200,
+    MIN_Y: 130,
+    MAX_Y: 630
   };
   /**
    * Получение текущей позиции пина
@@ -86,11 +86,11 @@
       var currentCoordinateX = pinMain.offsetLeft - shift.x;
       var currentCoordinateY = pinMain.offsetTop - shift.y;
 
-      if (currentCoordinateX >= locations.minX && currentCoordinateX <= locations.maxX - PIN_MAIN_WIDTH) {
+      if (currentCoordinateX >= MapRestriction.MIN_X && currentCoordinateX <= MapRestriction.MAX_X - PIN_MAIN_WIDTH) {
         pinMain.style.left = currentCoordinateX + 'px';
       }
 
-      if (currentCoordinateY >= locations.minY && currentCoordinateY <= locations.maxY) {
+      if (currentCoordinateY >= MapRestriction.MIN_Y && currentCoordinateY <= MapRestriction.MAX_Y) {
         pinMain.style.top = currentCoordinateY + 'px';
       }
       window.form.setInputAddressCoordinate(true);
