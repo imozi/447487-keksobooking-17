@@ -4,13 +4,13 @@
  * Методы setEventListeners, removeEventListeners, доступны для других модулей
  */
 (function () {
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var fileChooserAvatar = document.querySelector('#avatar');
   var fileChooserPhoto = document.querySelector('#images');
   var avatarDropZone = document.querySelector('.ad-form-header__drop-zone');
   var photoDropZone = document.querySelector('.ad-form__upload');
   var photoPreview = document.querySelector('.ad-form__photo');
   var containerPhoto = document.querySelector('.ad-form__photo-container');
+  var fileTypes = ['gif', 'jpg', 'jpeg', 'png'];
   /**
    * Показывает загруженное изображение аватара
    * @param {ObjectEvent} evt
@@ -23,7 +23,7 @@
       var reader = new FileReader();
       reader.readAsDataURL(file);
 
-      var matches = FILE_TYPES.some(function (item) {
+      var matches = fileTypes.some(function (item) {
         return fileName.endsWith(item);
       });
 
@@ -65,7 +65,7 @@
         var itemName = file.name.toLowerCase();
         reader.readAsDataURL(file);
 
-        var matches = FILE_TYPES.some(function (type) {
+        var matches = fileTypes.some(function (type) {
           return itemName.endsWith(type);
         });
 
