@@ -2,7 +2,7 @@
 /**
  * Модуль обработки данных с сервера и отправки данных на сервер
  * Зависимости backend.js, rendering.js, page.js, filter.js
- * Методы load, save в window.uploadDataServer доступны для других модулей
+ * Методы load, save в window.data доступны для других модулей
  */
 (function () {
   /**
@@ -31,12 +31,12 @@
    * @param {object} data
    */
   var save = function (data) {
-    window.backend.save(data, window.message.successSave, window.message.error);
+    window.backend.load(window.message.successSave, window.message.error, data);
   };
   /**
    * Экспорт в глобальную область видимости
    */
-  window.uploadDataServer = {
+  window.data = {
     load: load,
     save: save,
   };

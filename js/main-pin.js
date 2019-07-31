@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль перемещения главного пина
- * Зависимости page.js, form.js, upload.js
+ * Зависимости page.js, form.js, data.js
  * Метод getCurrentAddress, mainPosition в window.mainPin доступны для других модулей
  */
 (function () {

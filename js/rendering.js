@@ -11,7 +11,7 @@
    * Удаляет пины и открытую карточку объявления
    */
   var clear = function () {
-    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var pins = containerPins.querySelectorAll('.map__pin:not(.map__pin--main)');
 
     if (pins) {
       pins.forEach(function (element) {
@@ -36,7 +36,7 @@
     });
 
     containerPins.appendChild(fragment);
-    window.pin.onClickPinMap();
+    containerPins.addEventListener('click', window.pin.onClickPinMap);
   };
   /**
    * Рендерит карточку объявления в DOM и подписывается на событие click по кнопке "закрыть карточку" и keydown на документе
@@ -48,7 +48,8 @@
     fragment.appendChild(window.card.create(info));
     map.appendChild(fragment);
 
-    window.card.onClickCloseBtn();
+    var closeBtn = document.querySelector('.popup__close');
+    closeBtn.addEventListener('click', window.card.onClickCloseBtn);
     document.addEventListener('keydown', window.card.onEscCloseCard);
   };
   /**

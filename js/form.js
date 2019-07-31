@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль изменения форм страницы, валидация главной формы
- * Зависимости main-pin.js, rendering.js, page.js, utils.js
+ * Зависимости main-pin.js, rendering.js, page.js, utils.js data.js
  * Методы toggleState, setInputAddressCoordinate, reset, переменные filterElements, mainFieldsets, onChangeFilterValue,
  * removeOnChangeFilterValue, initialState, mainAddEventListeners, removeEventListenerAllMainForm в window.form доступны для дргуих модулей
  */
@@ -22,6 +22,7 @@
   var formFilterSelects = Array.from(formFilter.querySelectorAll('select'));
   var formFilterFieldset = formFilter.querySelector('fieldset');
   var formFilterElements = [].concat(formFilterSelects, formFilterFieldset);
+  var formAvatarPreview = formMain.querySelector('.ad-form-header__preview img');
   var PriceOfAccomodationType = {
     BUNGALO: 0,
     FLAT: 1000,
@@ -44,16 +45,18 @@
    * Сбрасывает главную форму и форму фильтра объявлений
    */
   var reset = function () {
-    var avatar = formMain.querySelector('.ad-form-header__preview img');
+    formAvatarPreview.src = STANDART_AVATAR;
     var photos = formMain.querySelectorAll('.ad-form__photo');
-    avatar.src = STANDART_AVATAR;
-
-    if (photos[0].firstChild) {
-      window.util.clearDomElement(photos[0].firstChild);
-    }
-
+    /**
+     * Первая проверка: если индекс элемента ровняется 0 и у него есть ребенок то удаляет этого ребенка.
+     * Вторая проверка: если индекс больше 0 то удалят лишнии элементы
+     * (нужно для того чтобы не удалять первый элемент так как у него удалятся только ребенок если он есть)
+     */
     photos.forEach(function (item, index) {
-      if (index >= 1) {
+      if (index === 0 && item.firstChild) {
+        window.util.clearDomElement(item.firstChild);
+      }
+      if (index > 0) {
         window.util.clearDomElement(item);
       }
     });
@@ -130,12 +133,24 @@
   };
   initialState();
   /**
+   * При событии click по кнопке "очистить" переводит странцу в неактивный режим
+   */
+  var onClickFormMainResetBtn = function () {
+    window.page.notActiveMode();
+  };
+  /**
    * Сохраняет данные главной формы на сервер
+   */
+  var saveDataFormOnServer = function () {
+    window.data.save(new FormData(formMain));
+  };
+  /**
+   * При событии submit сохраняет данные главной формы на сервер
    * @param {ObjectEvent} evt
    */
-  var saveDataFormOnServer = function (evt) {
+  var onSubmitFormMain = function (evt) {
     evt.preventDefault();
-    window.uploadDataServer.save(new FormData(formMain));
+    saveDataFormOnServer();
   };
   /**
    * Подписывается на события change, click, submit на полях главной формы
@@ -145,8 +160,8 @@
     formMainSelectTimeIn.addEventListener('change', onChangeTime);
     formMainSelectTimeOut.addEventListener('change', onChangeTime);
     formMainSubmitButton.addEventListener('click', onClickSubmitButton);
-    formMainResetBtn.addEventListener('click', window.page.notActiveMode);
-    formMain.addEventListener('submit', saveDataFormOnServer);
+    formMainResetBtn.addEventListener('click', onClickFormMainResetBtn);
+    formMain.addEventListener('submit', onSubmitFormMain);
   };
   /**
    * Удаляет всех слушателей событий с главной формы
@@ -156,8 +171,8 @@
     formMainSelectTimeIn.removeEventListener('change', onChangeTime);
     formMainSelectTimeOut.removeEventListener('change', onChangeTime);
     formMainSubmitButton.removeEventListener('click', onClickSubmitButton);
-    formMainResetBtn.removeEventListener('click', window.page.notActiveMode);
-    formMain.removeEventListener('submit', saveDataFormOnServer);
+    formMainResetBtn.removeEventListener('click', onClickFormMainResetBtn);
+    formMain.removeEventListener('submit', onSubmitFormMain);
   };
   /**
    * Экспорт в глобальную область видимости
@@ -172,7 +187,8 @@
     removeOnChangeFilterValue: removeOnChangeFilterValue,
     initialState: initialState,
     mainAddEventListeners: mainAddEventListeners,
-    mainRemoveAllEventListener: mainRemoveAllEventListener
+    mainRemoveAllEventListener: mainRemoveAllEventListener,
+    avatarPreview: formAvatarPreview
   };
 
 })();

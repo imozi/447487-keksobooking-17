@@ -6,7 +6,6 @@
  */
 (function () {
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var mapPins = document.querySelector('.map__pins');
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
   /**
@@ -47,23 +46,19 @@
    * Подписывается на событие click по блоку map__pin
    * Если клик был на пине или на картинке пина то сначала закрывает (если была уже открыта другая карточка) карточку
    * а потом рендерит соответствующию карточку текущего пина на которым произошло событие
+   * @param {ObjectEvent} evt
    */
-  var onClickPinMap = function () {
-    /**
-     * @param {ObjectEvent} evt
-     */
-    mapPins.addEventListener('click', function (evt) {
-      if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
-        window.card.close();
-        if (evt.target.tagName === 'IMG') {
-          evt.target.parentElement.classList.add('map__pin--active');
-          evt.target.parentElement.card(evt.target.parentElement.offer);
-        } else {
-          evt.target.classList.add('map__pin--active');
-          evt.target.card(evt.target.offer);
-        }
+  var onClickPinMap = function (evt) {
+    if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
+      window.card.close();
+      if (evt.target.tagName === 'IMG') {
+        evt.target.parentElement.classList.add('map__pin--active');
+        evt.target.parentElement.card(evt.target.parentElement.offer);
+      } else {
+        evt.target.classList.add('map__pin--active');
+        evt.target.card(evt.target.offer);
       }
-    });
+    }
   };
   /**
    * Экспорт в глобальную область видимости

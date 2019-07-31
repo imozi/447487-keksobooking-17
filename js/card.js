@@ -97,8 +97,7 @@
    * Закрывает карточку по событию click на кнопке "закрыть карточку"
    */
   var onClickCloseBtn = function () {
-    var closeBtn = document.querySelector('.popup__close');
-    closeBtn.addEventListener('click', close);
+    close();
   };
   /**
    * Закрывает карточку по нажатию клавиши ESC

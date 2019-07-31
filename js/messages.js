@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль показа сообщений при загруке данных с сервера и отправки данных на сервер
- * Зависимости backend.js, page.js, utils.js
+ * Зависимости backend.js, page.js, utils.js, data.js
  * Методы successSave, error в window.message доступны для других модулей
  */
 (function () {
@@ -29,9 +29,11 @@
     errorNode.querySelector('.error__message').textContent = text;
     main.appendChild(errorNode);
 
-    onClickCloseBtnMessageError();
     document.addEventListener('keydown', onEscCloseMessageError);
     document.addEventListener('click', onClickCloseMessageError);
+
+    var closeBtn = document.querySelector('.error').querySelector('.error__button');
+    closeBtn.addEventListener('click', onClickCloseBtnMessageError);
   };
   /**
    * Закрывает сообщение об успешном сохранении данных и отписывается от событий click, keydown на документе
@@ -65,7 +67,7 @@
 
     if (window.backend.isLoadError) {
       window.setTimeout(function () {
-        window.uploadDataServer.load();
+        window.data.load();
       }, TIME_OUT_LOAD);
       window.backend.isLoadError = false;
     }
@@ -77,8 +79,7 @@
    * Закрывает сообщение об ошибке по событию сlick на кнопке
    */
   var onClickCloseBtnMessageError = function () {
-    var closeBtn = document.querySelector('.error').querySelector('.error__button');
-    closeBtn.addEventListener('click', closeMessageError);
+    closeMessageError();
   };
   /**
    * Закрывает сообщение об ошибке по нажатию клавиши ESC

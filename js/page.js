@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Модуль состояния страницы
- * Зависимости form.js, rendering.js, main-pin.js, upload-img.js, utils.js
+ * Зависимости form.js, rendering.js, main-pin.js, upload-img.js, utils.js, data.js
  * Методы activeMode, notActiveMode в window.page доступны для других модулей
  * переменная isActiveMode (флаг для определения активного режима)
  */
@@ -16,7 +16,7 @@
     window.form.toggleState(window.form.mainFieldsets, false);
     window.form.setInputAddressCoordinate(true);
     window.form.mainAddEventListeners();
-    window.uploadDataServer.load();
+    window.data.load();
     window.mainPin.removeOnEnterPress();
     window.uploadImg.setEventListeners();
   };
