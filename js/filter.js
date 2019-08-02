@@ -66,7 +66,7 @@
    * Фильтрует данные по значениям фильтра и берет только первые 5
    * @return {object}
    */
-  window.filteringData = function () {
+  window.filter = function () {
     return window.dataAnnouncements.filter(function (item) {
       return window.form.filterElements.every(function (field) {
         return field.value === 'any' || filterСriteria[field.id](item, field);

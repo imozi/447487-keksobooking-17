@@ -48,7 +48,7 @@
    * а потом рендерит соответствующию карточку текущего пина на которым произошло событие
    * @param {ObjectEvent} evt
    */
-  var onClickPinMap = function (evt) {
+  var onClickMap = function (evt) {
     if (evt.target.closest('.map__pin:not(.map__pin--main)')) {
       window.card.close();
       if (evt.target.tagName === 'IMG') {
@@ -65,7 +65,7 @@
    */
   window.pin = {
     create: create,
-    onClickPinMap: onClickPinMap
+    onClickMap: onClickMap
   };
 
 })();

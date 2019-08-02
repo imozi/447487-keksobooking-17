@@ -90,7 +90,7 @@
         }
       });
 
-      document.removeEventListener('keydown', onEscCloseCard);
+      document.removeEventListener('keydown', onEscClose);
     }
   };
   /**
@@ -103,7 +103,7 @@
    * Закрывает карточку по нажатию клавиши ESC
    * @param {ObjectEvent} evt
    */
-  var onEscCloseCard = function (evt) {
+  var onEscClose = function (evt) {
     window.util.onEscPressDocument(evt, close);
   };
   /**
@@ -114,7 +114,7 @@
     open: open,
     close: close,
     onClickCloseBtn: onClickCloseBtn,
-    onEscCloseCard: onEscCloseCard
+    onEscClose: onEscClose
   };
 
 })();

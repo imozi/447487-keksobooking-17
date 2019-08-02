@@ -36,7 +36,7 @@
     });
 
     containerPins.appendChild(fragment);
-    containerPins.addEventListener('click', window.pin.onClickPinMap);
+    containerPins.addEventListener('click', window.pin.onClickMap);
   };
   /**
    * Рендерит карточку объявления в DOM и подписывается на событие click по кнопке "закрыть карточку" и keydown на документе
@@ -50,13 +50,13 @@
 
     var closeBtn = document.querySelector('.popup__close');
     closeBtn.addEventListener('click', window.card.onClickCloseBtn);
-    document.addEventListener('keydown', window.card.onEscCloseCard);
+    document.addEventListener('keydown', window.card.onEscClose);
   };
   /**
    * Рендерит пины по отфильтрованным данным объявления
    */
   var filteredDataPin = window.debounce(function () {
-    pin(window.filteringData());
+    pin(window.filter());
   });
   /**
    * Экспорт в глобальную область видимости

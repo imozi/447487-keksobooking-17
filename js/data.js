@@ -21,9 +21,9 @@
     window.dataAnnouncements = data;
 
     if (window.page.isActiveMode) {
-      window.rendering.pin(window.filteringData());
+      window.rendering.pin(window.filter());
       window.form.toggleState(window.form.filterElements, false);
-      window.form.onChangeFilterValue();
+      window.form.filter.addEventListener('change', window.form.onChangeFilterValue);
     }
   };
   /**

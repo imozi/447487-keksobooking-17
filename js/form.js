@@ -33,13 +33,13 @@
    * Подписывает на событие change формы фильтра, при изменении значений показывает соответсвующие объявления
    */
   var onChangeFilterValue = function () {
-    formFilter.addEventListener('change', window.rendering.filteredDataPin);
+    window.rendering.filteredDataPin();
   };
   /**
    * Отписывается от события change на форме фильтра
    */
   var removeOnChangeFilterValue = function () {
-    formFilter.removeEventListener('change', window.rendering.filteredDataPin);
+    formFilter.removeEventListener('change', window.form.onChangeFilterValue);
   };
   /**
    * Сбрасывает главную форму и форму фильтра объявлений
@@ -181,6 +181,7 @@
     toggleState: toggleState,
     setInputAddressCoordinate: setInputAddressCoordinate,
     reset: reset,
+    filter: formFilter,
     filterElements: formFilterElements,
     mainFieldsets: formMainFieldsets,
     onChangeFilterValue: onChangeFilterValue,
